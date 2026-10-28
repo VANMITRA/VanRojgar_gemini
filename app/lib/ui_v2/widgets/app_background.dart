@@ -2,41 +2,39 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../theme/van_rozgar_tokens.dart';
 
-/// Reusable full-screen visual background widget for VanRozgar Phase 1.
+/// Readability veil alpha opacity in light mode. Tune here.
+const double backgroundVeilAlphaLight = 0.45;
+
+/// Readability veil alpha opacity in dark mode. Tune here.
+const double backgroundVeilAlphaDark = 0.35;
+
+/// Reusable full-screen visual background widget for VanRozgar.
 ///
 /// Features:
-/// - Flat page colour layer (light #F7F2E8, dark #1C2619).
-/// - Header artwork aligned at the top (assets/backgrounds/header_{light,dark}.png).
-/// - Graceful errorBuilder fallback to flat page colour if image is missing.
-/// - Smooth 300ms implicit cross-fade category tint gradient over header only.
-/// - Optional footer illustration with soft linear gradient edges fading into page colour.
-/// - RepaintBoundary for optimal rendering performance on low-end devices.
+/// - Flat page colour base layer (light #F7F2E8, dark #1C2619).
+/// - Full-screen background artwork aligned at bottomCenter (assets/backgrounds/bg_full_{light,dark}.jpg).
+/// - Graceful errorBuilder fallback to flat page colour if image asset is missing (no crash or broken icon).
+/// - Central readability veil gradient with configurable alpha opacity.
+/// - Smooth 300ms implicit cross-fade category tint gradient from top of screen.
+/// - RepaintBoundary wrapping for optimal rendering performance across devices.
 class AppBackground extends StatelessWidget {
   final Widget child;
   final String? categorySlug;
-  final double? headerHeight;
   final bool useSafeArea;
-  final bool showFooter;
-  final double? footerHeight;
 
   const AppBackground({
     super.key,
     required this.child,
     this.categorySlug = 'all',
-    this.headerHeight,
     this.useSafeArea = false,
-    this.showFooter = false,
-    this.footerHeight,
   });
 
-  /// Precaches both header and footer artwork assets to prevent flash during theme switching.
+  /// Precaches the full-screen background artwork assets to prevent flash during theme switching.
   static Future<void> precacheArtwork(BuildContext context) async {
     try {
       await Future.wait([
-        precacheImage(const AssetImage(VanRozgarTokens.headerLightAsset), context),
-        precacheImage(const AssetImage(VanRozgarTokens.headerDarkAsset), context),
-        precacheImage(const AssetImage(VanRozgarTokens.footerLightAsset), context),
-        precacheImage(const AssetImage(VanRozgarTokens.footerDarkAsset), context),
+        precacheImage(const AssetImage(VanRozgarTokens.backgroundFullLightAsset), context),
+        precacheImage(const AssetImage(VanRozgarTokens.backgroundFullDarkAsset), context),
       ]);
     } catch (_) {
       // Missing assets fall back safely to flat colour layer without crashing
@@ -75,14 +73,10 @@ class AppBackground extends StatelessWidget {
         (isDark ? VanRozgarColorTokens.dark : VanRozgarColorTokens.light);
 
     final targetTintColor = _getTintColor(categorySlug, tokens, isDark);
-    final headerAsset = isDark ? VanRozgarTokens.headerDarkAsset : VanRozgarTokens.headerLightAsset;
-    final footerAsset = isDark ? VanRozgarTokens.footerDarkAsset : VanRozgarTokens.footerLightAsset;
-
     final topPadding = MediaQuery.paddingOf(context).top;
-    final resolvedHeaderHeight = headerHeight ?? (150.0 + topPadding);
-
-    final screenSize = MediaQuery.sizeOf(context);
-    final resolvedFooterHeight = footerHeight ?? math.min(screenSize.width / 2.0, screenSize.height * 0.32);
+    final screenHeight = MediaQuery.sizeOf(context).height;
+    final tintHeight = math.max(150.0 + topPadding, 0.24 * screenHeight);
+    final veilAlpha = isDark ? backgroundVeilAlphaDark : backgroundVeilAlphaLight;
 
     Widget content = child;
     if (useSafeArea) {
@@ -97,75 +91,55 @@ class AppBackground extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              // Layer 1: Flat page colour base
+              // Layer (a): Flat page colour base
               Container(color: tokens.page),
 
-              // Layer: Footer artwork aligned at the bottom (when showFooter is true)
-              if (showFooter)
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  height: resolvedFooterHeight,
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Image.asset(
-                        footerAsset,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        height: resolvedFooterHeight,
-                        alignment: Alignment.bottomCenter,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const SizedBox.shrink();
-                        },
-                      ),
-                      IgnorePointer(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              stops: const [0.0, 0.20, 0.90, 1.0],
-                              colors: [
-                                tokens.page,
-                                tokens.page.withValues(alpha: 0.0),
-                                tokens.page.withValues(alpha: 0.0),
-                                tokens.page,
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-              // Layer 2: Header artwork aligned at the top
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                height: resolvedHeaderHeight,
+              // Layer (b): Full-screen background artwork aligned at bottomCenter
+              Positioned.fill(
                 child: Image.asset(
-                  headerAsset,
+                  isDark
+                      ? VanRozgarTokens.backgroundFullDarkAsset
+                      : VanRozgarTokens.backgroundFullLightAsset,
                   fit: BoxFit.cover,
+                  alignment: Alignment.bottomCenter,
                   width: double.infinity,
-                  height: resolvedHeaderHeight,
-                  alignment: Alignment.topCenter,
-                  // If asset is missing, show plain page-colour layer: no crash, no broken-image icon
+                  height: double.infinity,
+                  gaplessPlayback: true,
                   errorBuilder: (context, error, stackTrace) {
                     return const SizedBox.shrink();
                   },
                 ),
               ),
 
-              // Layer 3: Category tint with 300ms implicit cross-fade
+              // Layer (c): Readability veil
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: const [0.0, 0.22, 0.30, 0.62, 0.85, 1.0],
+                        colors: [
+                          tokens.page.withValues(alpha: 0.0),
+                          tokens.page.withValues(alpha: 0.0),
+                          tokens.page.withValues(alpha: veilAlpha),
+                          tokens.page.withValues(alpha: veilAlpha),
+                          tokens.page.withValues(alpha: 0.0),
+                          tokens.page.withValues(alpha: 0.0),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              // Layer (d): Category tint gradient with 300ms implicit cross-fade
               Positioned(
                 top: 0,
                 left: 0,
                 right: 0,
-                height: resolvedHeaderHeight,
+                height: tintHeight,
                 child: TweenAnimationBuilder<Color?>(
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut,
@@ -173,7 +147,7 @@ class AppBackground extends StatelessWidget {
                   builder: (context, animatedColor, _) {
                     final color = animatedColor ?? targetTintColor;
                     return Container(
-                      height: resolvedHeaderHeight,
+                      height: tintHeight,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,

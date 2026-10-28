@@ -61,13 +61,9 @@ class VanRozgarTokens {
   // Minimum touch target
   static const double minTouchTarget = 48.0;
 
-  // Header image artwork paths
-  static const String headerLightAsset = 'assets/backgrounds/header_light.png';
-  static const String headerDarkAsset = 'assets/backgrounds/header_dark.png';
-
-  // Footer image artwork paths
-  static const String footerLightAsset = 'assets/backgrounds/footer_light.png';
-  static const String footerDarkAsset = 'assets/backgrounds/footer_dark.png';
+  // Full-screen background artwork paths
+  static const String backgroundFullLightAsset = 'assets/backgrounds/bg_full_light.jpg';
+  static const String backgroundFullDarkAsset = 'assets/backgrounds/bg_full_dark.jpg';
 
   // Landing screen slide artwork paths
   static const String landingSlide1Top = 'assets/landing/landing_1a_bamboo.jpg';

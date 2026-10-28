@@ -5,10 +5,10 @@ import 'package:vanrozgar/ui_v2/l10n/app_strings.dart';
 import 'package:vanrozgar/ui_v2/providers/catalog_providers.dart';
 import 'package:vanrozgar/ui_v2/shell/app_shell.dart';
 import 'package:vanrozgar/ui_v2/shell/home_demo_page.dart';
-import 'package:vanrozgar/ui_v2/shell/landing_geometry.dart';
 import 'package:vanrozgar/ui_v2/shell/landing_page.dart';
 import 'package:vanrozgar/ui_v2/shell/placeholder_pages.dart';
 import 'package:vanrozgar/ui_v2/theme/van_rozgar_theme.dart';
+import 'package:vanrozgar/ui_v2/widgets/app_background.dart';
 
 Widget _buildTestApp({
   required Widget child,
@@ -142,7 +142,7 @@ void main() {
       }
     });
 
-    testWidgets('(b) Categories, Cart, Orders and Profile pages build without exceptions when footer asset is missing',
+    testWidgets('(b) Categories, Cart, Orders and Profile pages build without exceptions when background asset is missing',
         (WidgetTester tester) async {
       // 1. Categories
       await tester.pumpWidget(_buildTestApp(child: const CategoriesPlaceholderPage()));
@@ -214,6 +214,28 @@ void main() {
         );
         await tester.pump();
         expect(tester.takeException(), isNull);
+
+        // Cart placeholder page
+        await tester.pumpWidget(
+          _buildTestApp(
+            child: const CartPlaceholderPage(),
+            language: AppLanguage.hi,
+            textScale: 1.5,
+          ),
+        );
+        await tester.pump();
+        expect(tester.takeException(), isNull);
+
+        // Orders placeholder page
+        await tester.pumpWidget(
+          _buildTestApp(
+            child: const OrdersPlaceholderPage(),
+            language: AppLanguage.hi,
+            textScale: 1.5,
+          ),
+        );
+        await tester.pump();
+        expect(tester.takeException(), isNull);
       }
     });
 
@@ -239,6 +261,83 @@ void main() {
         expect(size.width, greaterThanOrEqualTo(48.0));
         expect(size.height, greaterThanOrEqualTo(48.0));
       }
+    });
+
+    testWidgets('(e) Home, Categories, Cart, Orders and Profile still build with no overflow at 360x800 with textScaler 1.5 in Hindi',
+        (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(360.0 * 2.0, 800.0 * 2.0);
+      tester.view.devicePixelRatio = 2.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      final pages = [
+        const HomeDemoPage(),
+        const CategoriesPlaceholderPage(),
+        const CartPlaceholderPage(),
+        const OrdersPlaceholderPage(),
+        const ProfilePlaceholderPage(),
+      ];
+
+      for (final page in pages) {
+        await tester.pumpWidget(
+          _buildTestApp(
+            child: page,
+            language: AppLanguage.hi,
+            textScale: 1.5,
+          ),
+        );
+        await tester.pump();
+        expect(tester.takeException(), isNull);
+      }
+    });
+
+    testWidgets('(f) AppBackground builds without exceptions when the background asset is missing, in light and dark, at 320x568, 360x800 and 430x932',
+        (WidgetTester tester) async {
+      const sizes = [
+        Size(320.0, 568.0),
+        Size(360.0, 800.0),
+        Size(430.0, 932.0),
+      ];
+      const modes = [ThemeMode.light, ThemeMode.dark];
+      for (final size in sizes) {
+        for (final mode in modes) {
+          tester.view.physicalSize = Size(size.width * 2.0, size.height * 2.0);
+          tester.view.devicePixelRatio = 2.0;
+          addTearDown(tester.view.resetPhysicalSize);
+          addTearDown(tester.view.resetDevicePixelRatio);
+
+          await tester.pumpWidget(
+            _buildTestApp(
+              child: const AppBackground(
+                child: SizedBox.expand(),
+              ),
+              themeMode: mode,
+            ),
+          );
+          await tester.pump();
+          expect(find.byType(AppBackground), findsOneWidget);
+          expect(tester.takeException(), isNull);
+        }
+      }
+    });
+
+    testWidgets('(g) it contains exactly one Image widget with fit BoxFit.cover and alignment Alignment.bottomCenter, and no Image of any other kind',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+        _buildTestApp(
+          child: const AppBackground(
+            child: SizedBox.expand(),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      final imageFinder = find.byType(Image);
+      expect(imageFinder, findsOneWidget);
+
+      final Image imageWidget = tester.widget<Image>(imageFinder);
+      expect(imageWidget.fit, BoxFit.cover);
+      expect(imageWidget.alignment, Alignment.bottomCenter);
     });
   });
 

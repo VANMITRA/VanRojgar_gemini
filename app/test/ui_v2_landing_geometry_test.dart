@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vanrozgar/ui_v2/shell/landing_geometry.dart';
 
 void main() {
   group('LandingGeometry Unit Tests', () {
     test('Reference Card 1 points match specifications', () {
-      final card1 = LandingGeometry.card1Reference;
+      const card1 = LandingGeometry.card1Reference;
       expect(card1.topLeft, const Offset(0.436, 0.159));
       expect(card1.topRight, const Offset(0.969, 0.193));
       expect(card1.bottomRight, const Offset(0.998, 0.486));
@@ -13,7 +12,7 @@ void main() {
     });
 
     test('Reference Card 2 points match specifications', () {
-      final card2 = LandingGeometry.card2Reference;
+      const card2 = LandingGeometry.card2Reference;
       expect(card2.topLeft, const Offset(0.488, 0.568));
       expect(card2.topRight, const Offset(0.990, 0.493));
       expect(card2.bottomRight, const Offset(0.988, 0.828));
@@ -26,7 +25,7 @@ void main() {
     });
 
     test('Mirror function maps u to 1 - u', () {
-      final card1 = LandingGeometry.card1Reference;
+      const card1 = LandingGeometry.card1Reference;
       final mirrored = card1.mirrored();
 
       // Card 1 right edge was at ~0.998, mirrored left edge should be at ~0.002
@@ -43,7 +42,7 @@ void main() {
     });
 
     test('Card 1 right edge touches right screen edge on reference and left edge on mirror', () {
-      final ref = LandingGeometry.card1Reference;
+      const ref = LandingGeometry.card1Reference;
       expect(ref.bounds.right, closeTo(0.998, 0.001));
 
       final mirrored = LandingGeometry.getCard1(mirrored: true);
@@ -54,7 +53,7 @@ void main() {
       const double width = 360.0;
       const double height = 800.0;
       const double d = 360.0; // min(360, 800/2.2)
-      final double r = 0.058 * d;
+      const double r = 0.058 * d;
 
       for (final mirrored in [false, true]) {
         for (final isCard1 in [true, false]) {
@@ -78,12 +77,12 @@ void main() {
 
     test('Blob A and Blob B translations match specifications', () {
       final blobA = LandingGeometry.blobAReference;
-      final card1 = LandingGeometry.card1Reference;
+      const card1 = LandingGeometry.card1Reference;
       expect(blobA.topLeft.dx - card1.topLeft.dx, closeTo(0.015, 0.0001));
       expect(blobA.topLeft.dy - card1.topLeft.dy, closeTo(-0.045, 0.0001));
 
       final blobB = LandingGeometry.blobBReference;
-      final card2 = LandingGeometry.card2Reference;
+      const card2 = LandingGeometry.card2Reference;
       expect(blobB.topLeft.dx - card2.topLeft.dx, closeTo(-0.06, 0.0001));
       expect(blobB.topLeft.dy - card2.topLeft.dy, closeTo(0.035, 0.0001));
     });

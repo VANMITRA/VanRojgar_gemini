@@ -40,12 +40,8 @@ class _HomeDemoPageState extends ConsumerState<HomeDemoPage> {
     final isDark = theme.brightness == Brightness.dark;
     final tokens = theme.extension<VanRozgarColorTokens>() ??
         (isDark ? VanRozgarColorTokens.dark : VanRozgarColorTokens.light);
-    final topPadding = MediaQuery.paddingOf(context).top;
-    final headerHeight = 150.0 + topPadding;
-
     return AppBackground(
       categorySlug: selectedCategorySlug,
-      headerHeight: headerHeight,
       useSafeArea: false,
       child: SafeArea(
         bottom: false,

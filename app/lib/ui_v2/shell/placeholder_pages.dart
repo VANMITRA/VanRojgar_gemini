@@ -26,13 +26,8 @@ class _PlaceholderShell extends StatelessWidget {
     final tokens = theme.extension<VanRozgarColorTokens>() ??
         (isDark ? VanRozgarColorTokens.dark : VanRozgarColorTokens.light);
 
-    final topPadding = MediaQuery.paddingOf(context).top;
-    final headerHeight = 180.0 + topPadding;
-
     return AppBackground(
       categorySlug: 'forest-produce',
-      headerHeight: headerHeight,
-      showFooter: true,
       useSafeArea: true,
       child: Center(
         child: SingleChildScrollView(
