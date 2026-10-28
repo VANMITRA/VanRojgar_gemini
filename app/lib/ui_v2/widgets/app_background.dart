@@ -14,6 +14,8 @@ class AppBackground extends StatelessWidget {
   final String? categorySlug;
   final double headerHeight;
   final bool useSafeArea;
+  final bool showFooter;
+  final double footerHeight;
 
   const AppBackground({
     super.key,
@@ -21,14 +23,18 @@ class AppBackground extends StatelessWidget {
     this.categorySlug = 'all',
     this.headerHeight = 220.0,
     this.useSafeArea = false,
+    this.showFooter = false,
+    this.footerHeight = 200.0,
   });
 
-  /// Precaches both header artwork assets to prevent flash during theme switching.
+  /// Precaches both header and footer artwork assets to prevent flash during theme switching.
   static Future<void> precacheArtwork(BuildContext context) async {
     try {
       await Future.wait([
         precacheImage(const AssetImage(VanRozgarTokens.headerLightAsset), context),
         precacheImage(const AssetImage(VanRozgarTokens.headerDarkAsset), context),
+        precacheImage(const AssetImage(VanRozgarTokens.footerLightAsset), context),
+        precacheImage(const AssetImage(VanRozgarTokens.footerDarkAsset), context),
       ]);
     } catch (_) {
       // Missing assets fall back safely to flat colour layer without crashing
@@ -68,6 +74,7 @@ class AppBackground extends StatelessWidget {
 
     final targetTintColor = _getTintColor(categorySlug, tokens, isDark);
     final headerAsset = isDark ? VanRozgarTokens.headerDarkAsset : VanRozgarTokens.headerLightAsset;
+    final footerAsset = isDark ? VanRozgarTokens.footerDarkAsset : VanRozgarTokens.footerLightAsset;
 
     Widget content = child;
     if (useSafeArea) {
@@ -77,13 +84,32 @@ class AppBackground extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        // Layer 1 & 2: Static background layers wrapped in RepaintBoundary
+        // Static background layers wrapped in RepaintBoundary
         RepaintBoundary(
           child: Stack(
             fit: StackFit.expand,
             children: [
               // Layer 1: Flat page colour base
               Container(color: tokens.page),
+
+              // Layer: Footer artwork aligned at the bottom (when showFooter is true)
+              if (showFooter)
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  height: footerHeight,
+                  child: Image.asset(
+                    footerAsset,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: footerHeight,
+                    alignment: Alignment.bottomCenter,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const SizedBox.shrink();
+                    },
+                  ),
+                ),
 
               // Layer 2: Header artwork aligned at the top
               Positioned(

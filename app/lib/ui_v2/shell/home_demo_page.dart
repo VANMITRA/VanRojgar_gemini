@@ -43,7 +43,7 @@ class _HomeDemoPageState extends ConsumerState<HomeDemoPage> {
 
     return AppBackground(
       categorySlug: selectedCategorySlug,
-      headerHeight: 220.0,
+      headerHeight: 150.0,
       useSafeArea: false,
       child: SafeArea(
         bottom: false,

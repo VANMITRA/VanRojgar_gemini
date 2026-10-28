@@ -64,6 +64,10 @@ class VanRozgarTokens {
   // Header image artwork paths
   static const String headerLightAsset = 'assets/backgrounds/header_light.png';
   static const String headerDarkAsset = 'assets/backgrounds/header_dark.png';
+
+  // Footer image artwork paths
+  static const String footerLightAsset = 'assets/backgrounds/footer_light.png';
+  static const String footerDarkAsset = 'assets/backgrounds/footer_dark.png';
 }
 
 /// Token collection bundle accessible via Theme extension or direct token resolution.

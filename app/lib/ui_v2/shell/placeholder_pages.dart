@@ -29,6 +29,7 @@ class _PlaceholderShell extends StatelessWidget {
     return AppBackground(
       categorySlug: 'forest-produce',
       headerHeight: 180.0,
+      showFooter: true,
       useSafeArea: true,
       child: Center(
         child: SingleChildScrollView(
