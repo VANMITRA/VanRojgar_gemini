@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../l10n/app_strings.dart';
 import '../providers/catalog_providers.dart';
 import 'home_demo_page.dart';
+import 'landing_page.dart';
 import 'placeholder_pages.dart';
 
 /// Top-level shell widget with Material 3 NavigationBar for the 5 guest-accessible destinations.
@@ -62,10 +63,32 @@ class AppShellScaffold extends ConsumerWidget {
   }
 }
 
-/// GoRouter configuration for the VanRozgar Phase 1 guest-browseable shell.
+/// In-memory tracker for whether the 3-slide landing sequence has been seen.
+/// (In-memory for this demo; persistent storage will be integrated later).
+final ValueNotifier<bool> uiV2LandingSeen = ValueNotifier<bool>(false);
+
+/// GoRouter configuration for the VanRozgar Phase 1 guest-browseable shell and intro landing flow.
 final uiV2Router = GoRouter(
   initialLocation: '/',
+  refreshListenable: uiV2LandingSeen,
+  redirect: (context, state) {
+    final bool seen = uiV2LandingSeen.value;
+    final bool isAtLanding = state.matchedLocation == '/landing';
+    if (!seen && !isAtLanding) {
+      return '/landing';
+    }
+    if (seen && isAtLanding) {
+      return '/';
+    }
+    return null;
+  },
   routes: [
+    // Landing Route (outside the tabbed shell)
+    GoRoute(
+      path: '/landing',
+      builder: (context, state) => const LandingPage(),
+    ),
+
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
         return AppShellScaffold(navigationShell: navigationShell);

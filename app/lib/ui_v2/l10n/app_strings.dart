@@ -490,4 +490,218 @@ class AppStrings {
         return 'टप्पा 1 अतिथी पूर्वदृश्य — दाखवलेला सर्व डेटा नमुना सी.एफ़.आर. वनोपज आहे.';
     }
   }
+
+  // Landing Slide 1
+  String get landingSlide1Lead {
+    switch (language) {
+      case AppLanguage.en:
+        return 'Forest produce, straight from ';
+      case AppLanguage.hi:
+        return 'वनोपज, सीधे ';
+      case AppLanguage.mr:
+        return 'वनउपज, थेट ';
+    }
+  }
+
+  String get landingSlide1Highlight {
+    switch (language) {
+      case AppLanguage.en:
+        return 'CFR villages';
+      case AppLanguage.hi:
+        return 'सीएफआर गाँवों';
+      case AppLanguage.mr:
+        return 'सीएफआर गावांतून';
+    }
+  }
+
+  String get landingSlide1Tail {
+    switch (language) {
+      case AppLanguage.en:
+        return '';
+      case AppLanguage.hi:
+        return ' से';
+      case AppLanguage.mr:
+        return '';
+    }
+  }
+
+  String get landingSlide1Subtitle {
+    switch (language) {
+      case AppLanguage.en:
+        return 'Bamboo, mangoes and more, sold directly by Gram Sabhas and CFR holders in Nashik.';
+      case AppLanguage.hi:
+        return 'बाँस, आम और बहुत कुछ, नासिक की ग्राम सभाओं और सीएफआर धारकों द्वारा सीधे बेचा जाता है।';
+      case AppLanguage.mr:
+        return 'बांबू, आंबे आणि बरेच काही, नाशिकमधील ग्रामसभा आणि सीएफआर धारक थेट विकतात.';
+    }
+  }
+
+  String get landingSlide1PictureLabel {
+    switch (language) {
+      case AppLanguage.en:
+        return 'Bamboo and mangoes';
+      case AppLanguage.hi:
+        return 'बाँस और आम';
+      case AppLanguage.mr:
+        return 'बांबू आणि आंबे';
+    }
+  }
+
+  // Landing Slide 2
+  String get landingSlide2Lead {
+    switch (language) {
+      case AppLanguage.en:
+        return 'Traditional forest ';
+      case AppLanguage.hi:
+        return 'पारंपरिक वन ';
+      case AppLanguage.mr:
+        return 'पारंपरिक ';
+    }
+  }
+
+  String get landingSlide2Highlight {
+    switch (language) {
+      case AppLanguage.en:
+        return 'herbs and fruits';
+      case AppLanguage.hi:
+        return 'जड़ी-बूटियाँ और फल';
+      case AppLanguage.mr:
+        return 'वनौषधी आणि फळे';
+    }
+  }
+
+  String get landingSlide2Tail {
+    switch (language) {
+      case AppLanguage.en:
+        return '';
+      case AppLanguage.hi:
+        return '';
+      case AppLanguage.mr:
+        return '';
+    }
+  }
+
+  String get landingSlide2Subtitle {
+    switch (language) {
+      case AppLanguage.en:
+        return 'Amla, bael, harad, baheda and more, gathered in village forests.';
+      case AppLanguage.hi:
+        return 'आँवला, बेल, हरड़, बहेड़ा और बहुत कुछ, गाँव के जंगलों से इकट्ठा किया गया।';
+      case AppLanguage.mr:
+        return 'आवळा, बेल, हिरडा, बेहडा आणि बरेच काही, गावच्या जंगलातून गोळा केलेले.';
+    }
+  }
+
+  String get landingSlide2PictureLabel {
+    switch (language) {
+      case AppLanguage.en:
+        return 'Amla, bael and dried forest fruits';
+      case AppLanguage.hi:
+        return 'आँवला, बेल और सूखे वन फल';
+      case AppLanguage.mr:
+        return 'आवळा, बेल आणि वाळलेली वन फळे';
+    }
+  }
+
+  // Landing Slide 3
+  String get landingSlide3Lead {
+    switch (language) {
+      case AppLanguage.en:
+        return 'Work that stays ';
+      case AppLanguage.hi:
+        return 'रोज़गार जो ';
+      case AppLanguage.mr:
+        return 'रोजगार जो ';
+    }
+  }
+
+  String get landingSlide3Highlight {
+    switch (language) {
+      case AppLanguage.en:
+        return 'in the village';
+      case AppLanguage.hi:
+        return 'गाँव में ही रहे';
+      case AppLanguage.mr:
+        return 'गावातच राहतो';
+    }
+  }
+
+  String get landingSlide3Tail {
+    switch (language) {
+      case AppLanguage.en:
+        return '';
+      case AppLanguage.hi:
+        return '';
+      case AppLanguage.mr:
+        return '';
+    }
+  }
+
+  String get landingSlide3Subtitle {
+    switch (language) {
+      case AppLanguage.en:
+        return 'Gram Sabhas and CFR holders sell their produce and crafts directly to buyers.';
+      case AppLanguage.hi:
+        return 'ग्राम सभाएँ और सीएफआर धारक अपनी उपज और शिल्प सीधे खरीदारों को बेचते हैं।';
+      case AppLanguage.mr:
+        return 'ग्रामसभा आणि सीएफआर धारक त्यांची उपज आणि हस्तकला थेट खरेदीदारांना विकतात.';
+    }
+  }
+
+  String get landingSlide3PictureLabel {
+    switch (language) {
+      case AppLanguage.en:
+        return 'Hands weaving a bamboo basket and villagers sorting produce';
+      case AppLanguage.hi:
+        return 'बाँस की टोकरी बुनते हाथ और उपज छाँटते ग्रामीण';
+      case AppLanguage.mr:
+        return 'बांबूची टोपली विणणारे हात आणि उपज निवडणारे गावकरी';
+    }
+  }
+
+  // Landing Buttons
+  String get landingSkip {
+    switch (language) {
+      case AppLanguage.en:
+        return 'Skip';
+      case AppLanguage.hi:
+        return 'छोड़ें';
+      case AppLanguage.mr:
+        return 'वगळा';
+    }
+  }
+
+  String get landingNext {
+    switch (language) {
+      case AppLanguage.en:
+        return 'Next';
+      case AppLanguage.hi:
+        return 'आगे';
+      case AppLanguage.mr:
+        return 'पुढे';
+    }
+  }
+
+  String get landingGetStarted {
+    switch (language) {
+      case AppLanguage.en:
+        return 'Get Started';
+      case AppLanguage.hi:
+        return 'शुरू करें';
+      case AppLanguage.mr:
+        return 'सुरू करा';
+    }
+  }
+
+  // Semantic dot label
+  String landingSlideDotLabel(int current, int total) {
+    switch (language) {
+      case AppLanguage.en:
+        return 'Slide $current of $total';
+      case AppLanguage.hi:
+        return '$total में से स्लाइड $current';
+      case AppLanguage.mr:
+        return '$total पैकी स्लाइड $current';
+    }
+  }
 }

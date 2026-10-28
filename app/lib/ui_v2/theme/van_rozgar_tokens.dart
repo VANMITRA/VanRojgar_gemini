@@ -68,6 +68,14 @@ class VanRozgarTokens {
   // Footer image artwork paths
   static const String footerLightAsset = 'assets/backgrounds/footer_light.png';
   static const String footerDarkAsset = 'assets/backgrounds/footer_dark.png';
+
+  // Landing screen slide artwork paths
+  static const String landingSlide1Top = 'assets/landing/landing_1a_bamboo.jpg';
+  static const String landingSlide1Bottom = 'assets/landing/landing_1b_mango.jpg';
+  static const String landingSlide2Top = 'assets/landing/landing_2a_herbs_fresh.jpg';
+  static const String landingSlide2Bottom = 'assets/landing/landing_2b_herbs_dried.jpg';
+  static const String landingSlide3Top = 'assets/landing/landing_3a_weaving.jpg';
+  static const String landingSlide3Bottom = 'assets/landing/landing_3b_village_sorting.jpg';
 }
 
 /// Token collection bundle accessible via Theme extension or direct token resolution.
