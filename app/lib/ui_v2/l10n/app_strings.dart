@@ -339,77 +339,77 @@ class AppStrings {
   String get placeholderCategoriesTitle {
     switch (language) {
       case AppLanguage.en:
-        return 'CFR Produce Categories';
+        return 'Categories';
       case AppLanguage.hi:
-        return 'सी.एफ़.आर. वनोपज श्रेणियाँ';
+        return 'श्रेणियाँ';
       case AppLanguage.mr:
-        return 'सी.एफ़.आर. वनोपज वर्गवारी';
+        return 'वर्गवारी';
     }
   }
 
   String get placeholderCategoriesDesc {
     switch (language) {
       case AppLanguage.en:
-        return 'Browse all 8 Minor Forest Produce (MFP) and CFR categories verified by Gram Sabhas.';
+        return 'Browse all 8 Minor Forest Produce (MFP) and CFR categories.';
       case AppLanguage.hi:
-        return 'ग्राम सभाओं द्वारा सत्यापित सभी 8 लघु वनोपज (एम.एफ़.पी.) और सी.एफ़.आर. श्रेणियाँ देखें।';
+        return 'सभी 8 लघु वनोपज (एम.एफ़.पी.) और सी.एफ़.आर. श्रेणियाँ देखें।';
       case AppLanguage.mr:
-        return 'ग्रामसभांद्वारे पडताळणी केलेल्या सर्व 8 दुय्यम वनोपज (एम.एफ़.पी.) आणि सी.एफ़.आर. वर्गवारी पहा.';
+        return 'सर्व 8 दुय्यम वनोपज (एम.एफ़.पी.) आणि सी.एफ़.आर. वर्गवारी पहा.';
     }
   }
 
   String get placeholderCartTitle {
     switch (language) {
       case AppLanguage.en:
-        return 'Buyer Cart';
+        return 'Cart';
       case AppLanguage.hi:
-        return 'क्रेता कार्ट';
+        return 'कार्ट';
       case AppLanguage.mr:
-        return 'खरेदीदार कार्ट';
+        return 'कार्ट';
     }
   }
 
   String get placeholderCartDesc {
     switch (language) {
       case AppLanguage.en:
-        return 'Wholesale CFR orders and combined village consignments will appear here in Phase 2.';
+        return 'Items added to your cart will appear here.';
       case AppLanguage.hi:
-        return 'थोक सी.एफ़.आर. ऑर्डर और संयुक्त ग्राम खेप चरण 2 में यहाँ दिखाई देंगी।';
+        return 'आपके कार्ट में जोड़ी गई वस्तुएँ यहाँ दिखाई देंगी।';
       case AppLanguage.mr:
-        return 'घाऊक सी.एफ़.आर. ऑर्डर्स आणि एकत्रित गाव मालाची नोंद टप्पा 2 मध्ये येथे दिसेल.';
+        return 'तुमच्या कार्टमध्ये जोडलेल्या वस्तू येथे दिसतील.';
     }
   }
 
   String get placeholderOrdersTitle {
     switch (language) {
       case AppLanguage.en:
-        return 'Trade & Consignments';
+        return 'Orders';
       case AppLanguage.hi:
-        return 'व्यापार और प्रेषण';
+        return 'ऑर्डर';
       case AppLanguage.mr:
-        return 'व्यापार आणि मालवाहतूक';
+        return 'ऑर्डर्स';
     }
   }
 
   String get placeholderOrdersDesc {
     switch (language) {
       case AppLanguage.en:
-        return 'Track direct Gram Sabha procurement, CFR dispatch manifests, and local delivery partner progress.';
+        return 'Your requests and orders will appear here.';
       case AppLanguage.hi:
-        return 'सीधी ग्राम सभा खरीद, सी.एफ़.आर. प्रेषण घोषणापत्र और स्थानीय वितरण सहयोगी की प्रगति ट्रैक करें।';
+        return 'आपके अनुरोध और ऑर्डर यहाँ दिखाई देंगे।';
       case AppLanguage.mr:
-        return 'थेट ग्रामसभा खरेदी, सी.एफ़.आर. डिस्पॅच मॅनिफेस्ट आणि स्थानिक डिलिव्हरी भागीदार प्रगती ट्रॅक करा.';
+        return 'तुमच्या मागण्या आणि ऑर्डर्स येथे दिसतील.';
     }
   }
 
   String get placeholderProfileTitle {
     switch (language) {
       case AppLanguage.en:
-        return 'Guest Settings & Profile';
+        return 'Profile & Settings';
       case AppLanguage.hi:
-        return 'अतिथि सेटिंग्स और प्रोफाइल';
+        return 'प्रोफाइल और सेटिंग्स';
       case AppLanguage.mr:
-        return 'अतिथी सेटिंग्ज आणि प्रोफाइल';
+        return 'प्रोफाइल आणि सेटिंग्ज';
     }
   }
 

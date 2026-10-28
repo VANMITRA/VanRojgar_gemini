@@ -48,9 +48,9 @@ class MockCatalogRepository implements CatalogRepository {
     ),
     ProductItem(
       id: 'prod_003',
-      titleEn: 'Sun-Dried Organic Mahua Flowers',
+      titleEn: 'Sun-Dried Mahua Flowers',
       titleHi: 'धूप में सुखाए महुआ के फूल',
-      titleMr: 'उन्हात वाळवलेली मोहाची फुले',
+      titleMr: 'वाळवलेली मोहाची फुले',
       categorySlug: 'flowers',
       pricePaise: 12000, // ₹120
       unitEn: 'kg',
@@ -62,9 +62,9 @@ class MockCatalogRepository implements CatalogRepository {
     ),
     ProductItem(
       id: 'prod_004',
-      titleEn: 'Pure Raw Ashwagandha Root',
-      titleHi: 'शुद्ध कच्ची अश्वगंधा जड़',
-      titleMr: 'शुद्ध ताजे अश्वगंधा मूळ',
+      titleEn: 'Raw Ashwagandha Root',
+      titleHi: 'कच्ची अश्वगंधा जड़',
+      titleMr: 'अश्वगंधा मूळ',
       categorySlug: 'medicinal-plants',
       pricePaise: 35000, // ₹350
       unitEn: '500g',
@@ -90,9 +90,9 @@ class MockCatalogRepository implements CatalogRepository {
     ),
     ProductItem(
       id: 'prod_006',
-      titleEn: 'Organic Forest Tamarind Pods',
-      titleHi: 'प्राकृतिक जंगली इमली',
-      titleMr: 'सेंद्रिय रानचिंच',
+      titleEn: 'Forest Tamarind Pods',
+      titleHi: 'जंगली इमली',
+      titleMr: 'रानचिंच',
       categorySlug: 'fruit',
       pricePaise: 9000, // ₹90
       unitEn: 'kg',
