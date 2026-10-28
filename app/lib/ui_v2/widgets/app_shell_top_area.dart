@@ -42,12 +42,17 @@ class AppShellTopArea extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      strings.appNameNative,
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        color: tokens.heading,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: -0.2,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        strings.appNameNative,
+                        maxLines: 1,
+                        style: theme.textTheme.headlineMedium?.copyWith(
+                          color: tokens.heading,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -0.2,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 2.0),

@@ -40,10 +40,12 @@ class _HomeDemoPageState extends ConsumerState<HomeDemoPage> {
     final isDark = theme.brightness == Brightness.dark;
     final tokens = theme.extension<VanRozgarColorTokens>() ??
         (isDark ? VanRozgarColorTokens.dark : VanRozgarColorTokens.light);
+    final topPadding = MediaQuery.paddingOf(context).top;
+    final headerHeight = 150.0 + topPadding;
 
     return AppBackground(
       categorySlug: selectedCategorySlug,
-      headerHeight: 150.0,
+      headerHeight: headerHeight,
       useSafeArea: false,
       child: SafeArea(
         bottom: false,
@@ -104,12 +106,15 @@ class _HomeDemoPageState extends ConsumerState<HomeDemoPage> {
                     Expanded(
                       child: Text(
                         strings.browseSubtitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.titleMedium?.copyWith(
                           color: tokens.heading,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
+                    const SizedBox(width: VanRozgarTokens.space8),
                     Text(
                       strings.sampleBadge,
                       style: theme.textTheme.labelSmall?.copyWith(
@@ -156,20 +161,22 @@ class _HomeDemoPageState extends ConsumerState<HomeDemoPage> {
                   sliver: SliverLayoutBuilder(
                     builder: (context, constraints) {
                       final width = constraints.crossAxisExtent;
-                      final int crossAxisCount;
-                      final double childAspectRatio;
+                      final textScale = MediaQuery.textScalerOf(context).scale(1.0);
 
-                      if (width >= 900) {
+                      final int crossAxisCount;
+                      if (width >= 960) {
                         crossAxisCount = 4;
-                        childAspectRatio = 0.72;
-                      } else if (width >= 600) {
+                      } else if (width > 600) {
                         crossAxisCount = 3;
-                        childAspectRatio = 0.70;
                       } else {
-                        // Standard mobile width (360px - 430px)
                         crossAxisCount = 2;
-                        childAspectRatio = 0.67;
                       }
+
+                      // Dynamic childAspectRatio calculation to prevent overflow on any phone width and text scale
+                      final double totalSpacing = VanRozgarTokens.space12 * (crossAxisCount - 1);
+                      final double colWidth = (width - totalSpacing) / crossAxisCount;
+                      final double estimatedCardHeight = (colWidth / 1.25) + 44.0 + (74.0 * textScale);
+                      final double childAspectRatio = (colWidth / estimatedCardHeight).clamp(0.48, 0.85);
 
                       return SliverGrid(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

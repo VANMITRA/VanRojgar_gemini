@@ -26,22 +26,25 @@ class _PlaceholderShell extends StatelessWidget {
     final tokens = theme.extension<VanRozgarColorTokens>() ??
         (isDark ? VanRozgarColorTokens.dark : VanRozgarColorTokens.light);
 
+    final topPadding = MediaQuery.paddingOf(context).top;
+    final headerHeight = 180.0 + topPadding;
+
     return AppBackground(
       categorySlug: 'forest-produce',
-      headerHeight: 180.0,
+      headerHeight: headerHeight,
       showFooter: true,
       useSafeArea: true,
       child: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(
-            horizontal: VanRozgarTokens.space24,
+            horizontal: VanRozgarTokens.space16,
             vertical: VanRozgarTokens.space24,
           ),
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 500.0),
             child: Card(
               child: Padding(
-                padding: const EdgeInsets.all(VanRozgarTokens.space24),
+                padding: const EdgeInsets.all(VanRozgarTokens.space20),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -173,32 +176,36 @@ class ProfilePlaceholderPage extends ConsumerWidget {
             style: theme.textTheme.titleMedium?.copyWith(color: tokens.heading),
           ),
           const SizedBox(height: VanRozgarTokens.space8),
-          SegmentedButton<ThemeMode>(
-            segments: [
-              ButtonSegment<ThemeMode>(
-                value: ThemeMode.system,
-                label: Text(strings.themeSystem),
-                icon: const Icon(Icons.brightness_auto, size: 18.0),
-              ),
-              ButtonSegment<ThemeMode>(
-                value: ThemeMode.light,
-                label: Text(strings.themeLight),
-                icon: const Icon(Icons.light_mode, size: 18.0),
-              ),
-              ButtonSegment<ThemeMode>(
-                value: ThemeMode.dark,
-                label: Text(strings.themeDark),
-                icon: const Icon(Icons.dark_mode, size: 18.0),
-              ),
-            ],
-            selected: {currentThemeMode},
-            onSelectionChanged: (newSelection) {
-              ref.read(uiV2ThemeModeProvider.notifier).state = newSelection.first;
-            },
-            style: ButtonStyle(
-              visualDensity: VisualDensity.comfortable,
-              shape: WidgetStateProperty.all(
-                const RoundedRectangleBorder(borderRadius: VanRozgarTokens.borderPill),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.center,
+            child: SegmentedButton<ThemeMode>(
+              segments: [
+                ButtonSegment<ThemeMode>(
+                  value: ThemeMode.system,
+                  label: Text(strings.themeSystem),
+                  icon: const Icon(Icons.brightness_auto, size: 18.0),
+                ),
+                ButtonSegment<ThemeMode>(
+                  value: ThemeMode.light,
+                  label: Text(strings.themeLight),
+                  icon: const Icon(Icons.light_mode, size: 18.0),
+                ),
+                ButtonSegment<ThemeMode>(
+                  value: ThemeMode.dark,
+                  label: Text(strings.themeDark),
+                  icon: const Icon(Icons.dark_mode, size: 18.0),
+                ),
+              ],
+              selected: {currentThemeMode},
+              onSelectionChanged: (newSelection) {
+                ref.read(uiV2ThemeModeProvider.notifier).state = newSelection.first;
+              },
+              style: ButtonStyle(
+                visualDensity: VisualDensity.comfortable,
+                shape: WidgetStateProperty.all(
+                  const RoundedRectangleBorder(borderRadius: VanRozgarTokens.borderPill),
+                ),
               ),
             ),
           ),
@@ -211,29 +218,33 @@ class ProfilePlaceholderPage extends ConsumerWidget {
             style: theme.textTheme.titleMedium?.copyWith(color: tokens.heading),
           ),
           const SizedBox(height: VanRozgarTokens.space8),
-          SegmentedButton<AppLanguage>(
-            segments: const [
-              ButtonSegment<AppLanguage>(
-                value: AppLanguage.en,
-                label: Text('English'),
-              ),
-              ButtonSegment<AppLanguage>(
-                value: AppLanguage.hi,
-                label: Text('हिंदी'),
-              ),
-              ButtonSegment<AppLanguage>(
-                value: AppLanguage.mr,
-                label: Text('मराठी'),
-              ),
-            ],
-            selected: {currentLanguage},
-            onSelectionChanged: (newSelection) {
-              ref.read(uiV2LanguageProvider.notifier).state = newSelection.first;
-            },
-            style: ButtonStyle(
-              visualDensity: VisualDensity.comfortable,
-              shape: WidgetStateProperty.all(
-                const RoundedRectangleBorder(borderRadius: VanRozgarTokens.borderPill),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.center,
+            child: SegmentedButton<AppLanguage>(
+              segments: const [
+                ButtonSegment<AppLanguage>(
+                  value: AppLanguage.en,
+                  label: Text('English'),
+                ),
+                ButtonSegment<AppLanguage>(
+                  value: AppLanguage.hi,
+                  label: Text('हिंदी'),
+                ),
+                ButtonSegment<AppLanguage>(
+                  value: AppLanguage.mr,
+                  label: Text('मराठी'),
+                ),
+              ],
+              selected: {currentLanguage},
+              onSelectionChanged: (newSelection) {
+                ref.read(uiV2LanguageProvider.notifier).state = newSelection.first;
+              },
+              style: ButtonStyle(
+                visualDensity: VisualDensity.comfortable,
+                shape: WidgetStateProperty.all(
+                  const RoundedRectangleBorder(borderRadius: VanRozgarTokens.borderPill),
+                ),
               ),
             ),
           ),

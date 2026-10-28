@@ -44,7 +44,7 @@ class SampleProductCard extends StatelessWidget {
               children: [
                 // 1. Picture Panel: Flat #E4EDCB in BOTH light & dark modes
                 AspectRatio(
-                  aspectRatio: 1.15,
+                  aspectRatio: 1.25,
                   child: Container(
                     decoration: const BoxDecoration(
                       color: VanRozgarTokens.picturePanel,
@@ -136,17 +136,14 @@ class SampleProductCard extends StatelessWidget {
                 const SizedBox(height: 3.0),
 
                 // 3. Localised mock product title
-                SizedBox(
-                  height: 38.0, // Fixed two-line height so grid cells align cleanly
-                  child: Text(
-                    title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      color: tokens.heading,
-                      fontWeight: FontWeight.w700,
-                      height: 1.25,
-                    ),
+                Text(
+                  title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    color: tokens.heading,
+                    fontWeight: FontWeight.w700,
+                    height: 1.25,
                   ),
                 ),
 

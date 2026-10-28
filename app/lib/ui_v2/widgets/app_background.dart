@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../theme/van_rozgar_tokens.dart';
 
@@ -8,23 +9,24 @@ import '../theme/van_rozgar_tokens.dart';
 /// - Header artwork aligned at the top (assets/backgrounds/header_{light,dark}.png).
 /// - Graceful errorBuilder fallback to flat page colour if image is missing.
 /// - Smooth 300ms implicit cross-fade category tint gradient over header only.
+/// - Optional footer illustration with soft linear gradient edges fading into page colour.
 /// - RepaintBoundary for optimal rendering performance on low-end devices.
 class AppBackground extends StatelessWidget {
   final Widget child;
   final String? categorySlug;
-  final double headerHeight;
+  final double? headerHeight;
   final bool useSafeArea;
   final bool showFooter;
-  final double footerHeight;
+  final double? footerHeight;
 
   const AppBackground({
     super.key,
     required this.child,
     this.categorySlug = 'all',
-    this.headerHeight = 220.0,
+    this.headerHeight,
     this.useSafeArea = false,
     this.showFooter = false,
-    this.footerHeight = 200.0,
+    this.footerHeight,
   });
 
   /// Precaches both header and footer artwork assets to prevent flash during theme switching.
@@ -76,6 +78,12 @@ class AppBackground extends StatelessWidget {
     final headerAsset = isDark ? VanRozgarTokens.headerDarkAsset : VanRozgarTokens.headerLightAsset;
     final footerAsset = isDark ? VanRozgarTokens.footerDarkAsset : VanRozgarTokens.footerLightAsset;
 
+    final topPadding = MediaQuery.paddingOf(context).top;
+    final resolvedHeaderHeight = headerHeight ?? (150.0 + topPadding);
+
+    final screenSize = MediaQuery.sizeOf(context);
+    final resolvedFooterHeight = footerHeight ?? math.min(screenSize.width / 2.0, screenSize.height * 0.32);
+
     Widget content = child;
     if (useSafeArea) {
       content = SafeArea(child: content);
@@ -98,16 +106,38 @@ class AppBackground extends StatelessWidget {
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  height: footerHeight,
-                  child: Image.asset(
-                    footerAsset,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: footerHeight,
-                    alignment: Alignment.bottomCenter,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const SizedBox.shrink();
-                    },
+                  height: resolvedFooterHeight,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Image.asset(
+                        footerAsset,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: resolvedFooterHeight,
+                        alignment: Alignment.bottomCenter,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const SizedBox.shrink();
+                        },
+                      ),
+                      IgnorePointer(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              stops: const [0.0, 0.20, 0.90, 1.0],
+                              colors: [
+                                tokens.page,
+                                tokens.page.withValues(alpha: 0.0),
+                                tokens.page.withValues(alpha: 0.0),
+                                tokens.page,
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 
@@ -116,12 +146,12 @@ class AppBackground extends StatelessWidget {
                 top: 0,
                 left: 0,
                 right: 0,
-                height: headerHeight,
+                height: resolvedHeaderHeight,
                 child: Image.asset(
                   headerAsset,
                   fit: BoxFit.cover,
                   width: double.infinity,
-                  height: headerHeight,
+                  height: resolvedHeaderHeight,
                   alignment: Alignment.topCenter,
                   // If asset is missing, show plain page-colour layer: no crash, no broken-image icon
                   errorBuilder: (context, error, stackTrace) {
@@ -135,7 +165,7 @@ class AppBackground extends StatelessWidget {
                 top: 0,
                 left: 0,
                 right: 0,
-                height: headerHeight,
+                height: resolvedHeaderHeight,
                 child: TweenAnimationBuilder<Color?>(
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut,
@@ -143,7 +173,7 @@ class AppBackground extends StatelessWidget {
                   builder: (context, animatedColor, _) {
                     final color = animatedColor ?? targetTintColor;
                     return Container(
-                      height: headerHeight,
+                      height: resolvedHeaderHeight,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
