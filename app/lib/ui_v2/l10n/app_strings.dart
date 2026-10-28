@@ -491,48 +491,71 @@ class AppStrings {
     }
   }
 
-  // Landing Slide 1
-  String get landingSlide1Lead {
-    switch (language) {
+  // Short language chip labels (not translated)
+  static String shortLanguageLabel(AppLanguage lang) {
+    switch (lang) {
       case AppLanguage.en:
-        return 'Forest produce, straight from ';
+        return 'EN';
       case AppLanguage.hi:
-        return 'वनोपज, सीधे ';
+        return 'हिं';
       case AppLanguage.mr:
-        return 'वनउपज, थेट ';
+        return 'मरा';
     }
   }
 
-  String get landingSlide1Highlight {
+  // Slide 1
+  String get landingSlide1Eyebrow {
     switch (language) {
       case AppLanguage.en:
-        return 'CFR villages';
+        return 'EXPLORE';
       case AppLanguage.hi:
-        return 'सीएफआर गाँवों';
+        return 'खोजें';
       case AppLanguage.mr:
-        return 'सीएफआर गावांतून';
+        return 'शोधा';
     }
   }
 
-  String get landingSlide1Tail {
+  List<String> get landingSlide1HeadlineLines {
     switch (language) {
       case AppLanguage.en:
-        return '';
+        return const ['Straight', 'from the', 'village', 'forest'];
       case AppLanguage.hi:
-        return ' से';
+        return const ['सीधे', 'गाँव के', 'जंगल', 'से'];
       case AppLanguage.mr:
-        return '';
+        return const ['थेट', 'गावच्या', 'जंगलातून'];
+    }
+  }
+
+  int get landingSlide1HighlightIndex {
+    switch (language) {
+      case AppLanguage.en:
+        return 3;
+      case AppLanguage.hi:
+        return 2;
+      case AppLanguage.mr:
+        return 2;
     }
   }
 
   String get landingSlide1Subtitle {
     switch (language) {
       case AppLanguage.en:
-        return 'Bamboo, mangoes and more, sold directly by Gram Sabhas and CFR holders in Nashik.';
+        return 'Bamboo, mangoes and more from CFR villages in Nashik.';
       case AppLanguage.hi:
-        return 'बाँस, आम और बहुत कुछ, नासिक की ग्राम सभाओं और सीएफआर धारकों द्वारा सीधे बेचा जाता है।';
+        return 'बाँस, आम और बहुत कुछ, नासिक के सीएफआर गाँवों से।';
       case AppLanguage.mr:
-        return 'बांबू, आंबे आणि बरेच काही, नाशिकमधील ग्रामसभा आणि सीएफआर धारक थेट विकतात.';
+        return 'बांबू, आंबे आणि बरेच काही, नाशिकमधील सीएफआर गावांतून.';
+    }
+  }
+
+  List<String> get landingSlide1NoteLines {
+    switch (language) {
+      case AppLanguage.en:
+        return const ['Sell direct.', 'Earn local.'];
+      case AppLanguage.hi:
+        return const ['सीधा बेचें।', 'स्थानीय कमाएं।'];
+      case AppLanguage.mr:
+        return const ['थेट विक्री.', 'स्थानिक रोजगार.'];
     }
   }
 
@@ -547,48 +570,59 @@ class AppStrings {
     }
   }
 
-  // Landing Slide 2
-  String get landingSlide2Lead {
+  // Slide 2
+  String get landingSlide2Eyebrow {
     switch (language) {
       case AppLanguage.en:
-        return 'Traditional forest ';
+        return 'TRADITIONAL';
       case AppLanguage.hi:
-        return 'पारंपरिक वन ';
+        return 'पारंपरिक';
       case AppLanguage.mr:
-        return 'पारंपरिक ';
+        return 'पारंपरिक';
     }
   }
 
-  String get landingSlide2Highlight {
+  List<String> get landingSlide2HeadlineLines {
     switch (language) {
       case AppLanguage.en:
-        return 'herbs and fruits';
+        return const ['Forest', 'herbs', 'and', 'fruits'];
       case AppLanguage.hi:
-        return 'जड़ी-बूटियाँ और फल';
+        return const ['वन की', 'जड़ी-बूटी', 'और फल'];
       case AppLanguage.mr:
-        return 'वनौषधी आणि फळे';
+        return const ['वनौषधी', 'आणि', 'फळे'];
     }
   }
 
-  String get landingSlide2Tail {
+  int get landingSlide2HighlightIndex {
     switch (language) {
       case AppLanguage.en:
-        return '';
+        return 1;
       case AppLanguage.hi:
-        return '';
+        return 1;
       case AppLanguage.mr:
-        return '';
+        return 0;
     }
   }
 
   String get landingSlide2Subtitle {
     switch (language) {
       case AppLanguage.en:
-        return 'Amla, bael, harad, baheda and more, gathered in village forests.';
+        return 'Amla, bael, harad, baheda and more from village forests.';
       case AppLanguage.hi:
-        return 'आँवला, बेल, हरड़, बहेड़ा और बहुत कुछ, गाँव के जंगलों से इकट्ठा किया गया।';
+        return 'आँवला, बेल, हरड़, बहेड़ा और बहुत कुछ, गाँव के जंगलों से।';
       case AppLanguage.mr:
-        return 'आवळा, बेल, हिरडा, बेहडा आणि बरेच काही, गावच्या जंगलातून गोळा केलेले.';
+        return 'आवळा, बेल, हिरडा, बेहडा आणि बरेच काही, गावच्या जंगलातून.';
+    }
+  }
+
+  List<String> get landingSlide2NoteLines {
+    switch (language) {
+      case AppLanguage.en:
+        return const ['Sell direct.'];
+      case AppLanguage.hi:
+        return const ['सीधा बेचें।'];
+      case AppLanguage.mr:
+        return const ['थेट विक्री.'];
     }
   }
 
@@ -603,48 +637,59 @@ class AppStrings {
     }
   }
 
-  // Landing Slide 3
-  String get landingSlide3Lead {
+  // Slide 3
+  String get landingSlide3Eyebrow {
     switch (language) {
       case AppLanguage.en:
-        return 'Work that stays ';
+        return 'COMMUNITY';
       case AppLanguage.hi:
-        return 'रोज़गार जो ';
+        return 'समुदाय';
       case AppLanguage.mr:
-        return 'रोजगार जो ';
+        return 'समुदाय';
     }
   }
 
-  String get landingSlide3Highlight {
+  List<String> get landingSlide3HeadlineLines {
     switch (language) {
       case AppLanguage.en:
-        return 'in the village';
+        return const ['Work', 'that stays', 'in the', 'village'];
       case AppLanguage.hi:
-        return 'गाँव में ही रहे';
+        return const ['रोज़गार', 'जो गाँव', 'में ही', 'रहे'];
       case AppLanguage.mr:
-        return 'गावातच राहतो';
+        return const ['रोजगार', 'जो', 'गावातच', 'राहतो'];
     }
   }
 
-  String get landingSlide3Tail {
+  int get landingSlide3HighlightIndex {
     switch (language) {
       case AppLanguage.en:
-        return '';
+        return 3;
       case AppLanguage.hi:
-        return '';
+        return 0;
       case AppLanguage.mr:
-        return '';
+        return 2;
     }
   }
 
   String get landingSlide3Subtitle {
     switch (language) {
       case AppLanguage.en:
-        return 'Gram Sabhas and CFR holders sell their produce and crafts directly to buyers.';
+        return 'Gram Sabhas and CFR holders sell direct to buyers.';
       case AppLanguage.hi:
-        return 'ग्राम सभाएँ और सीएफआर धारक अपनी उपज और शिल्प सीधे खरीदारों को बेचते हैं।';
+        return 'ग्राम सभाएँ और सीएफआर धारक सीधे खरीदारों को बेचते हैं।';
       case AppLanguage.mr:
-        return 'ग्रामसभा आणि सीएफआर धारक त्यांची उपज आणि हस्तकला थेट खरेदीदारांना विकतात.';
+        return 'ग्रामसभा आणि सीएफआर धारक थेट खरेदीदारांना विकतात.';
+    }
+  }
+
+  List<String> get landingSlide3NoteLines {
+    switch (language) {
+      case AppLanguage.en:
+        return const ['Earn local.'];
+      case AppLanguage.hi:
+        return const ['स्थानीय कमाएं।'];
+      case AppLanguage.mr:
+        return const ['स्थानिक रोजगार.'];
     }
   }
 
@@ -655,7 +700,7 @@ class AppStrings {
       case AppLanguage.hi:
         return 'बाँस की टोकरी बुनते हाथ और उपज छाँटते ग्रामीण';
       case AppLanguage.mr:
-        return 'बांबूची टोपली विणणारे हात आणि उपज निवडणारे गावकरी';
+        return 'बांबूची टोपली विणणारे हाथ आणि उपज निवडणारे गावकरी';
     }
   }
 

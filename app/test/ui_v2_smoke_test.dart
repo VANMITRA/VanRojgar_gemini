@@ -5,6 +5,7 @@ import 'package:vanrozgar/ui_v2/l10n/app_strings.dart';
 import 'package:vanrozgar/ui_v2/providers/catalog_providers.dart';
 import 'package:vanrozgar/ui_v2/shell/app_shell.dart';
 import 'package:vanrozgar/ui_v2/shell/home_demo_page.dart';
+import 'package:vanrozgar/ui_v2/shell/landing_geometry.dart';
 import 'package:vanrozgar/ui_v2/shell/landing_page.dart';
 import 'package:vanrozgar/ui_v2/shell/placeholder_pages.dart';
 import 'package:vanrozgar/ui_v2/theme/van_rozgar_theme.dart';
@@ -98,7 +99,7 @@ Widget _buildTestNavApp({
 
 void main() {
   setUp(() {
-    // Default to true for existing shell tests
+    // Default to true for shell and catalog tests
     uiV2LandingSeen.value = true;
   });
 
@@ -226,13 +227,13 @@ void main() {
       final navBarSize = tester.getSize(find.byType(NavigationBar));
       expect(navBarSize.height, greaterThanOrEqualTo(48.0));
 
-      final inkResponses = find.descendant(
+      final navDests = find.descendant(
         of: find.byType(NavigationBar),
-        matching: find.byType(InkResponse),
+        matching: find.byType(NavigationDestination),
       );
-      expect(inkResponses, findsNWidgets(5));
+      expect(navDests, findsNWidgets(5));
       for (int i = 0; i < 5; i++) {
-        final size = tester.getSize(inkResponses.at(i));
+        final size = tester.getSize(navDests.at(i));
         expect(size.width, greaterThanOrEqualTo(48.0));
         expect(size.height, greaterThanOrEqualTo(48.0));
       }
@@ -240,18 +241,24 @@ void main() {
   });
 
   group('VanRozgar Landing Intro Page Tests', () {
-    testWidgets('(a) with uiV2LandingSeen false, the first screen is the landing page showing slide 1 text',
+    testWidgets('(a) first screen is landing slide 1 with eyebrow, headline lines and subtitle',
         (WidgetTester tester) async {
       uiV2LandingSeen.value = false;
       await tester.pumpWidget(_buildTestRouterApp());
       await tester.pumpAndSettle();
 
       expect(find.byType(LandingPage), findsOneWidget);
-      expect(find.textContaining('Forest produce, straight from'), findsOneWidget);
-      expect(find.textContaining('CFR villages'), findsOneWidget);
+      expect(find.text('EXPLORE'), findsOneWidget);
+      expect(find.text('Straight'), findsOneWidget);
+      expect(find.text('from the'), findsOneWidget);
+      expect(find.text('village'), findsOneWidget);
+      expect(find.text('forest'), findsOneWidget);
+      expect(find.text('Bamboo, mangoes and more from CFR villages in Nashik.'), findsOneWidget);
+      expect(find.text('Skip'), findsOneWidget);
+      expect(find.text('Next'), findsOneWidget);
     });
 
-    testWidgets('(b) Next moves to slide 2, then slide 3, which shows Get Started',
+    testWidgets('(b) Next goes to slide 2, then slide 3 which shows Get Started',
         (WidgetTester tester) async {
       uiV2LandingSeen.value = false;
       await tester.pumpWidget(_buildTestRouterApp());
@@ -259,21 +266,27 @@ void main() {
 
       expect(find.text('Next'), findsOneWidget);
 
-      // Move to slide 2
+      // Slide 1 -> Slide 2
       await tester.tap(find.text('Next'));
       await tester.pumpAndSettle();
-      expect(find.textContaining('Traditional forest'), findsOneWidget);
+      expect(find.text('TRADITIONAL'), findsOneWidget);
+      expect(find.text('Forest'), findsOneWidget);
+      expect(find.text('herbs'), findsOneWidget);
+      expect(find.text('Amla, bael, harad, baheda and more from village forests.'), findsOneWidget);
       expect(find.text('Next'), findsOneWidget);
 
-      // Move to slide 3
+      // Slide 2 -> Slide 3
       await tester.tap(find.text('Next'));
       await tester.pumpAndSettle();
-      expect(find.textContaining('Work that stays'), findsOneWidget);
+      expect(find.text('COMMUNITY'), findsOneWidget);
+      expect(find.text('Work'), findsOneWidget);
+      expect(find.text('that stays'), findsOneWidget);
+      expect(find.text('village'), findsOneWidget);
+      expect(find.text('Gram Sabhas and CFR holders sell direct to buyers.'), findsOneWidget);
       expect(find.text('Get Started'), findsOneWidget);
     });
 
-    testWidgets('(c) Skip on slide 1 opens shell with Home tab; Get Started on slide 3 opens shell too',
-        (WidgetTester tester) async {
+    testWidgets('(c) Skip and Get Started open shell', (WidgetTester tester) async {
       // 1. Skip on slide 1
       uiV2LandingSeen.value = false;
       await tester.pumpWidget(_buildTestRouterApp());
@@ -304,8 +317,7 @@ void main() {
       expect(find.byType(HomeDemoPage), findsOneWidget);
     });
 
-    testWidgets('(d) in Hindi and in Marathi no English landing text appears',
-        (WidgetTester tester) async {
+    testWidgets('(d) in Hindi and Marathi no English landing text', (WidgetTester tester) async {
       // Hindi check
       await tester.pumpWidget(
         _buildTestApp(
@@ -318,9 +330,14 @@ void main() {
       expect(find.text('Skip'), findsNothing);
       expect(find.text('Next'), findsNothing);
       expect(find.text('Get Started'), findsNothing);
-      expect(find.textContaining('Forest produce'), findsNothing);
+      expect(find.text('EXPLORE'), findsNothing);
+      expect(find.text('Straight'), findsNothing);
+      expect(find.text('खोजें'), findsOneWidget);
       expect(find.text('छोड़ें'), findsOneWidget);
       expect(find.text('आगे'), findsOneWidget);
+
+      // Reset tree before pumping Marathi app
+      await tester.pumpWidget(const SizedBox());
 
       // Marathi check
       await tester.pumpWidget(
@@ -334,12 +351,14 @@ void main() {
       expect(find.text('Skip'), findsNothing);
       expect(find.text('Next'), findsNothing);
       expect(find.text('Get Started'), findsNothing);
-      expect(find.textContaining('Forest produce'), findsNothing);
+      expect(find.text('EXPLORE'), findsNothing);
+      expect(find.text('Straight'), findsNothing);
+      expect(find.text('शोधा'), findsOneWidget);
       expect(find.text('वगळा'), findsOneWidget);
       expect(find.text('पुढे'), findsOneWidget);
     });
 
-    testWidgets('(e) no overflow exceptions on landing at 320x568, 360x800 and 430x932 with textScaler 1.5 in light/dark in Hindi',
+    testWidgets('(e) no overflow exceptions at 320x568, 360x800 and 430x932 with textScaler 1.5 in light, dark and Hindi',
         (WidgetTester tester) async {
       final landingSizes = [
         const Size(320.0, 568.0),
@@ -368,13 +387,75 @@ void main() {
       }
     });
 
-    testWidgets('(f) the landing builds without exceptions when picture assets are missing',
+    testWidgets('(f) builds without exceptions when picture assets are missing',
         (WidgetTester tester) async {
       await tester.pumpWidget(_buildTestApp(child: const LandingPage()));
       await tester.pumpAndSettle();
 
       expect(find.byType(LandingPage), findsOneWidget);
       expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('Geometry tests: headline overlap, subtitle clearance, card polygon bounds',
+        (WidgetTester tester) async {
+      const double W = 390.0;
+      const double H = 844.0;
+      tester.view.physicalSize = const Size(W * 2.0, H * 2.0);
+      tester.view.devicePixelRatio = 2.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      uiV2LandingSeen.value = false;
+      await tester.pumpWidget(_buildTestRouterApp());
+      await tester.pumpAndSettle();
+
+      // --- Slide 1 (Mirrored) ---
+      final slide1HeadlineRect = tester.getRect(find.byKey(const Key('landing_headline')));
+      final slide1Card1Rect = tester.getRect(find.byKey(const Key('landing_card_top')));
+      final slide1Card2Rect = tester.getRect(find.byKey(const Key('landing_card_bottom')));
+      final slide1SubtitleRect = tester.getRect(find.byKey(const Key('landing_subtitle')));
+
+      // Headline Rect overlaps Card 1 bounding Rect by between 0.02 W and 0.12 W
+      final slide1Overlap = slide1Card1Rect.right - slide1HeadlineRect.left;
+      expect(slide1Overlap, greaterThanOrEqualTo(0.02 * W - 1.0));
+      expect(slide1Overlap, lessThanOrEqualTo(0.12 * W + 1.0));
+
+      // Subtitle Rect never overlaps Card 2 bounding Rect
+      expect(slide1SubtitleRect.overlaps(slide1Card2Rect), isFalse);
+
+      // Slide 1 Card 1 left edge touches the screen's left edge (mirror)
+      expect(slide1Card1Rect.left, closeTo(0.0, 2.0));
+
+      // --- Slide 2 (Reference) ---
+      await tester.tap(find.text('Next'));
+      await tester.pumpAndSettle();
+
+      final slide2HeadlineRect = tester.getRect(find.byKey(const Key('landing_headline')));
+      final slide2Card1Rect = tester.getRect(find.byKey(const Key('landing_card_top')));
+      final slide2Card2Rect = tester.getRect(find.byKey(const Key('landing_card_bottom')));
+      final slide2SubtitleRect = tester.getRect(find.byKey(const Key('landing_subtitle')));
+
+      // Headline Rect overlaps Card 1 bounding Rect by between 0.02 W and 0.12 W
+      final slide2Overlap = slide2HeadlineRect.right - slide2Card1Rect.left;
+      expect(slide2Overlap, greaterThanOrEqualTo(0.02 * W - 1.0));
+      expect(slide2Overlap, lessThanOrEqualTo(0.12 * W + 1.0));
+
+      // Subtitle Rect never overlaps Card 2 bounding Rect
+      expect(slide2SubtitleRect.overlaps(slide2Card2Rect), isFalse);
+
+      // Slide 2 Card 1 right edge touches the screen's right edge
+      expect(slide2Card1Rect.right, closeTo(W, 2.0));
+
+      // Two card polygons stay inside the screen (0 <= x <= W, 0 <= y <= H)
+      expect(slide2Card1Rect.left, greaterThanOrEqualTo(0.0));
+      expect(slide2Card1Rect.right, lessThanOrEqualTo(W + 0.1));
+      expect(slide2Card1Rect.top, greaterThanOrEqualTo(0.0));
+      expect(slide2Card1Rect.bottom, lessThanOrEqualTo(H));
+
+      expect(slide2Card2Rect.left, greaterThanOrEqualTo(0.0));
+      expect(slide2Card2Rect.right, lessThanOrEqualTo(W + 0.1));
+      expect(slide2Card2Rect.top, greaterThanOrEqualTo(0.0));
+      expect(slide2Card2Rect.bottom, lessThanOrEqualTo(H));
     });
   });
 }

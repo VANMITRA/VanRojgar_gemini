@@ -6,11 +6,10 @@ import '../l10n/app_strings.dart';
 import '../providers/catalog_providers.dart';
 import '../theme/van_rozgar_tokens.dart';
 import 'app_shell.dart';
+import 'landing_geometry.dart';
 
-/// The 3-slide introductory landing screen for VanRozgar.
-///
-/// Introduces CFR produce with swipeable illustrated slides before transitioning
-/// to the guest catalog shop.
+/// The pixel-accurate VanRozgar Landing (onboarding) Page with custom rounded-quadrilateral
+/// image cards, overlapping text, handwritten note accents, and fixed controls.
 class LandingPage extends ConsumerStatefulWidget {
   const LandingPage({super.key});
 
@@ -74,6 +73,16 @@ class _LandingPageState extends ConsumerState<LandingPage> {
     final tokens = theme.extension<VanRozgarColorTokens>() ??
         (isDark ? VanRozgarColorTokens.dark : VanRozgarColorTokens.light);
 
+    final mediaQuery = MediaQuery.of(context);
+    final W = mediaQuery.size.width;
+    final H = mediaQuery.size.height;
+    final d = math.min(W, H / 2.2);
+    final safeTop = mediaQuery.padding.top;
+    final safeBottom = mediaQuery.padding.bottom;
+
+    // Ink color: near-black #1A1D16 in light mode, cream (tokens.heading) in dark mode
+    final inkColor = isDark ? tokens.heading : const Color(0xFF1A1D16);
+
     return PopScope(
       canPop: _currentPage == 0,
       onPopInvokedWithResult: (didPop, result) {
@@ -83,515 +92,689 @@ class _LandingPageState extends ConsumerState<LandingPage> {
       },
       child: Scaffold(
         backgroundColor: tokens.page,
-        body: SafeArea(
-          child: Column(
-            children: [
-              // 1. Top Bar: Language Chips (Left) & Skip Text Button (Right)
-              _buildTopBar(context, language, strings, tokens),
-
-              // 2. Main Slide Body (PageView with 3 slides)
-              Expanded(
-                child: PageView(
-                  controller: _pageController,
-                  physics: const BouncingScrollPhysics(),
-                  onPageChanged: (index) {
-                    setState(() {
-                      _currentPage = index;
-                    });
-                  },
-                  children: [
-                    // Slide 1: pictures on LEFT, text on RIGHT
-                    _LandingSlide(
-                      slideIndex: 0,
-                      isMirrored: false,
-                      lead: strings.landingSlide1Lead,
-                      highlight: strings.landingSlide1Highlight,
-                      tail: strings.landingSlide1Tail,
-                      subtitle: strings.landingSlide1Subtitle,
-                      pictureLabel: strings.landingSlide1PictureLabel,
-                      topAsset: VanRozgarTokens.landingSlide1Top,
-                      bottomAsset: VanRozgarTokens.landingSlide1Bottom,
-                      tokens: tokens,
-                    ),
-
-                    // Slide 2: text on LEFT, pictures on RIGHT (mirrored)
-                    _LandingSlide(
-                      slideIndex: 1,
-                      isMirrored: true,
-                      lead: strings.landingSlide2Lead,
-                      highlight: strings.landingSlide2Highlight,
-                      tail: strings.landingSlide2Tail,
-                      subtitle: strings.landingSlide2Subtitle,
-                      pictureLabel: strings.landingSlide2PictureLabel,
-                      topAsset: VanRozgarTokens.landingSlide2Top,
-                      bottomAsset: VanRozgarTokens.landingSlide2Bottom,
-                      tokens: tokens,
-                    ),
-
-                    // Slide 3: pictures on LEFT, text on RIGHT
-                    _LandingSlide(
-                      slideIndex: 2,
-                      isMirrored: false,
-                      lead: strings.landingSlide3Lead,
-                      highlight: strings.landingSlide3Highlight,
-                      tail: strings.landingSlide3Tail,
-                      subtitle: strings.landingSlide3Subtitle,
-                      pictureLabel: strings.landingSlide3PictureLabel,
-                      topAsset: VanRozgarTokens.landingSlide3Top,
-                      bottomAsset: VanRozgarTokens.landingSlide3Bottom,
-                      tokens: tokens,
-                    ),
-                  ],
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            // 1. Swipeable Slide Content (PageView)
+            PageView(
+              controller: _pageController,
+              physics: const BouncingScrollPhysics(),
+              onPageChanged: (index) {
+                setState(() {
+                  _currentPage = index;
+                });
+              },
+              children: [
+                // Slide 1: Mirrored (Pictures LEFT, Text RIGHT)
+                _LandingSlideView(
+                  isMirrored: true,
+                  eyebrow: strings.landingSlide1Eyebrow,
+                  headlineLines: strings.landingSlide1HeadlineLines,
+                  highlightIndex: strings.landingSlide1HighlightIndex,
+                  subtitle: strings.landingSlide1Subtitle,
+                  noteLines: strings.landingSlide1NoteLines,
+                  pictureLabel: strings.landingSlide1PictureLabel,
+                  topAsset: VanRozgarTokens.landingSlide1Top,
+                  bottomAsset: VanRozgarTokens.landingSlide1Bottom,
+                  W: W,
+                  H: H,
+                  d: d,
+                  language: language,
+                  tokens: tokens,
+                  inkColor: inkColor,
                 ),
-              ),
 
-              // 3. Bottom Bar: Page Indicator Dots (Left) & Next/Get Started Button (Right)
-              _buildBottomBar(context, strings, tokens),
-            ],
-          ),
+                // Slide 2: Reference (Pictures RIGHT, Text LEFT)
+                _LandingSlideView(
+                  isMirrored: false,
+                  eyebrow: strings.landingSlide2Eyebrow,
+                  headlineLines: strings.landingSlide2HeadlineLines,
+                  highlightIndex: strings.landingSlide2HighlightIndex,
+                  subtitle: strings.landingSlide2Subtitle,
+                  noteLines: strings.landingSlide2NoteLines,
+                  pictureLabel: strings.landingSlide2PictureLabel,
+                  topAsset: VanRozgarTokens.landingSlide2Top,
+                  bottomAsset: VanRozgarTokens.landingSlide2Bottom,
+                  W: W,
+                  H: H,
+                  d: d,
+                  language: language,
+                  tokens: tokens,
+                  inkColor: inkColor,
+                ),
+
+                // Slide 3: Mirrored (Pictures LEFT, Text RIGHT)
+                _LandingSlideView(
+                  isMirrored: true,
+                  eyebrow: strings.landingSlide3Eyebrow,
+                  headlineLines: strings.landingSlide3HeadlineLines,
+                  highlightIndex: strings.landingSlide3HighlightIndex,
+                  subtitle: strings.landingSlide3Subtitle,
+                  noteLines: strings.landingSlide3NoteLines,
+                  pictureLabel: strings.landingSlide3PictureLabel,
+                  topAsset: VanRozgarTokens.landingSlide3Top,
+                  bottomAsset: VanRozgarTokens.landingSlide3Bottom,
+                  W: W,
+                  H: H,
+                  d: d,
+                  language: language,
+                  tokens: tokens,
+                  inkColor: inkColor,
+                ),
+              ],
+            ),
+
+            // 2. Fixed Top Bar (Logo left, Language Chips center, Skip right)
+            _buildFixedTopBar(
+              context: context,
+              W: W,
+              H: H,
+              d: d,
+              safeTop: safeTop,
+              currentLanguage: language,
+              strings: strings,
+              tokens: tokens,
+              inkColor: inkColor,
+            ),
+
+            // 3. Fixed Bottom Bar (Dots left, Action button right)
+            _buildFixedBottomBar(
+              context: context,
+              W: W,
+              H: H,
+              d: d,
+              safeBottom: safeBottom,
+              strings: strings,
+              tokens: tokens,
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildTopBar(
-    BuildContext context,
-    AppLanguage currentLanguage,
-    AppStrings strings,
-    VanRozgarColorTokens tokens,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: VanRozgarTokens.space16,
-        vertical: VanRozgarTokens.space4,
-      ),
-      child: SizedBox(
-        height: VanRozgarTokens.minTouchTarget,
-        child: Row(
-          children: [
-            // Left: Language Selector Chips
-            Expanded(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: AppLanguage.values.map((lang) {
-                      final isSelected = lang == currentLanguage;
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 6.0),
-                        child: Semantics(
-                          button: true,
-                          selected: isSelected,
-                          label: lang.nativeLabel,
-                          child: InkWell(
-                            onTap: () {
-                              ref.read(uiV2LanguageProvider.notifier).state = lang;
-                            },
-                            borderRadius: VanRozgarTokens.borderPill,
-                            child: Container(
-                              constraints: const BoxConstraints(
-                                minHeight: VanRozgarTokens.minTouchTarget,
-                                minWidth: 48.0,
-                              ),
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0,
-                                vertical: 6.0,
-                              ),
-                              decoration: BoxDecoration(
-                                color: isSelected ? tokens.primaryGreen : tokens.chipBg,
-                                borderRadius: VanRozgarTokens.borderPill,
-                                border: Border.all(
-                                  color: isSelected ? tokens.primaryGreen : tokens.borders,
-                                  width: 1.0,
-                                ),
-                              ),
-                              child: Text(
-                                lang.nativeLabel,
-                                style: TextStyle(
-                                  fontSize: 12.0,
-                                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
-                                  color: isSelected ? tokens.onPrimaryGreen : tokens.heading,
-                                ),
-                              ),
-                            ),
+  Widget _buildFixedTopBar({
+    required BuildContext context,
+    required double W,
+    required double H,
+    required double d,
+    required double safeTop,
+    required AppLanguage currentLanguage,
+    required AppStrings strings,
+    required VanRozgarColorTokens tokens,
+    required Color inkColor,
+  }) {
+    // Vertically centred at v = 0.098 * H, but never above safeTop + 28 dp
+    final topBarCenterY = math.max(0.098 * H, safeTop + 28.0);
+    const topBarHeight = VanRozgarTokens.minTouchTarget;
+    final topBarTop = topBarCenterY - (topBarHeight / 2.0);
+
+    return Positioned(
+      top: topBarTop,
+      left: 0.082 * W,
+      right: (1.0 - 0.935) * W,
+      height: topBarHeight,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Left: Leaf icon + App name
+          Icon(
+            Icons.eco,
+            size: 0.07 * d,
+            color: tokens.heading,
+          ),
+          const SizedBox(width: 4.0),
+          Text(
+            strings.appNameNative,
+            style: TextStyle(
+              fontFamily: VanRozgarTokens.fontFamily,
+              fontSize: 0.064 * d,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.02 * (0.064 * d),
+              color: inkColor,
+            ),
+          ),
+
+          const Spacer(),
+
+          // Middle: Three tiny language chips (EN, हिं, मरा)
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: AppLanguage.values.map((lang) {
+              final isSelected = lang == currentLanguage;
+              final label = AppStrings.shortLanguageLabel(lang);
+
+              return Semantics(
+                button: true,
+                selected: isSelected,
+                label: lang.nativeLabel,
+                child: InkWell(
+                  onTap: () {
+                    ref.read(uiV2LanguageProvider.notifier).state = lang;
+                  },
+                  borderRadius: VanRozgarTokens.borderPill,
+                  child: Container(
+                    constraints: const BoxConstraints(
+                      minWidth: 48.0,
+                      minHeight: 48.0,
+                    ),
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          label,
+                          style: TextStyle(
+                            fontFamily: VanRozgarTokens.fontFamily,
+                            fontSize: 0.033 * d,
+                            fontWeight: FontWeight.w600,
+                            color: isSelected ? tokens.primaryGreen : tokens.mutedText,
                           ),
+                        ),
+                        const SizedBox(height: 2.0),
+                        Container(
+                          width: 14.0,
+                          height: 2.0,
+                          color: isSelected ? tokens.primaryGreen : Colors.transparent,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+
+          const Spacer(),
+
+          // Right: Skip button
+          Semantics(
+            button: true,
+            label: strings.landingSkip,
+            child: InkWell(
+              onTap: _finishLanding,
+              borderRadius: VanRozgarTokens.borderPill,
+              child: Container(
+                constraints: const BoxConstraints(
+                  minWidth: 48.0,
+                  minHeight: 48.0,
+                ),
+                alignment: Alignment.centerRight,
+                child: Text(
+                  strings.landingSkip,
+                  style: TextStyle(
+                    fontFamily: VanRozgarTokens.fontFamily,
+                    fontSize: 0.036 * d,
+                    fontWeight: FontWeight.w600,
+                    color: tokens.mutedText,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFixedBottomBar({
+    required BuildContext context,
+    required double W,
+    required double H,
+    required double d,
+    required double safeBottom,
+    required AppStrings strings,
+    required VanRozgarColorTokens tokens,
+  }) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    final buttonHeight = 0.15 * d;
+    final maxBottomPos = H - safeBottom - 12.0 - buttonHeight;
+    final preferredTop = 0.923 * H - (buttonHeight / 2.0);
+    final buttonTop = math.min(preferredTop, maxBottomPos);
+
+    final isLastSlide = _currentPage == 2;
+    final buttonLabel = isLastSlide ? strings.landingGetStarted : strings.landingNext;
+
+    final buttonFill = isDark ? tokens.primaryGreen : tokens.heading;
+    final buttonTextColor = isDark ? tokens.onPrimaryGreen : Colors.white;
+
+    return Positioned(
+      top: buttonTop,
+      left: 0.0,
+      right: 0.0,
+      height: buttonHeight,
+      child: Stack(
+        children: [
+          // Dots on the left: left edge u = 0.065 * W
+          Positioned(
+            left: 0.065 * W,
+            top: 0.0,
+            bottom: 0.0,
+            child: Center(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: List.generate(3, (index) {
+                  final isActive = index == _currentPage;
+                  return Semantics(
+                    label: strings.landingSlideDotLabel(index + 1, 3),
+                    child: Container(
+                      margin: EdgeInsets.only(right: index < 2 ? 13.0 : 0.0),
+                      width: isActive ? 18.0 : 8.0,
+                      height: 8.0,
+                      decoration: BoxDecoration(
+                        color: isActive ? tokens.primaryGreen : tokens.borders,
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ),
+          ),
+
+          // Button on the right: left edge u = 0.42 * W, right edge u = 0.939 * W
+          Positioned(
+            left: 0.42 * W,
+            right: (1.0 - 0.939) * W,
+            top: 0.0,
+            bottom: 0.0,
+            child: Semantics(
+              button: true,
+              label: buttonLabel,
+              child: InkWell(
+                onTap: _handleNext,
+                borderRadius: BorderRadius.circular(0.033 * W),
+                child: Container(
+                  height: buttonHeight,
+                  decoration: BoxDecoration(
+                    color: buttonFill,
+                    borderRadius: BorderRadius.circular(0.033 * W),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        buttonLabel,
+                        style: TextStyle(
+                          fontFamily: VanRozgarTokens.fontFamily,
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.w600,
+                          color: buttonTextColor,
+                        ),
+                      ),
+                      const SizedBox(width: 24.0),
+                      Icon(
+                        Icons.east,
+                        size: 22.0,
+                        color: buttonTextColor,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// A full-screen slide containing background blobs, rounded quadrilateral picture cards,
+/// text block, and handwritten note.
+class _LandingSlideView extends StatelessWidget {
+  final bool isMirrored;
+  final String eyebrow;
+  final List<String> headlineLines;
+  final int highlightIndex;
+  final String subtitle;
+  final List<String> noteLines;
+  final String pictureLabel;
+  final String topAsset;
+  final String bottomAsset;
+  final double W;
+  final double H;
+  final double d;
+  final AppLanguage language;
+  final VanRozgarColorTokens tokens;
+  final Color inkColor;
+
+  const _LandingSlideView({
+    required this.isMirrored,
+    required this.eyebrow,
+    required this.headlineLines,
+    required this.highlightIndex,
+    required this.subtitle,
+    required this.noteLines,
+    required this.pictureLabel,
+    required this.topAsset,
+    required this.bottomAsset,
+    required this.W,
+    required this.H,
+    required this.d,
+    required this.language,
+    required this.tokens,
+    required this.inkColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    // Polygons
+    final card1Poly = LandingGeometry.getCard1(mirrored: isMirrored);
+    final card2Poly = LandingGeometry.getCard2(mirrored: isMirrored);
+    final blobAPoly = LandingGeometry.getBlobA(mirrored: isMirrored);
+    final blobBPoly = LandingGeometry.getBlobB(mirrored: isMirrored);
+
+    final card1Rect = card1Poly.absoluteBounds(W, H);
+    final card2Rect = card2Poly.absoluteBounds(W, H);
+    final blobARect = blobAPoly.absoluteBounds(W, H);
+    final blobBRect = blobBPoly.absoluteBounds(W, H);
+
+    final cardRadius = 0.058 * d;
+    final blobRadius = 0.09 * d;
+
+    final blobColor = tokens.chipBg.withValues(alpha: isDark ? 0.50 : 0.75);
+
+    // Headline auto-fit calculation:
+    // If the widest line is wider than 0.50 * W, reduce font size until it fits (minimum 24 sp)
+    double headlineFontSize = math.min(0.16 * W, 0.073 * H);
+    final maxAllowedWidth = 0.50 * W;
+
+    for (int step = 0; step < 50; step++) {
+      double maxLineWidth = 0.0;
+      for (final line in headlineLines) {
+        final painter = TextPainter(
+          text: TextSpan(
+            text: line,
+            style: TextStyle(
+              fontFamily: VanRozgarTokens.fontFamily,
+              fontSize: headlineFontSize,
+              fontWeight: FontWeight.w900,
+              letterSpacing: -0.03 * headlineFontSize,
+            ),
+          ),
+          textDirection: TextDirection.ltr,
+        )..layout();
+        if (painter.width > maxLineWidth) {
+          maxLineWidth = painter.width;
+        }
+      }
+      if (maxLineWidth <= maxAllowedWidth || headlineFontSize <= 24.0) {
+        break;
+      }
+      headlineFontSize = math.max(24.0, headlineFontSize - 1.0);
+    }
+
+    final eyebrowFontSize = 0.034 * d;
+    final isDevanagari = language == AppLanguage.hi || language == AppLanguage.mr;
+
+    return Semantics(
+      label: pictureLabel,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          // 1. Blob A (behind Card 1)
+          Positioned.fromRect(
+            rect: blobARect,
+            child: ClipPath(
+              clipper: _PolygonClipper(
+                points: blobAPoly.toAbsolute(W, H).map((p) => p - blobARect.topLeft).toList(),
+                radius: blobRadius,
+              ),
+              child: Container(color: blobColor),
+            ),
+          ),
+
+          // 2. Blob B (behind Card 2)
+          Positioned.fromRect(
+            rect: blobBRect,
+            child: ClipPath(
+              clipper: _PolygonClipper(
+                points: blobBPoly.toAbsolute(W, H).map((p) => p - blobBRect.topLeft).toList(),
+                radius: blobRadius,
+              ),
+              child: Container(color: blobColor),
+            ),
+          ),
+
+          // 3. Picture Card 1 (Top)
+          Positioned.fromRect(
+            rect: card1Rect,
+            child: KeyedSubtree(
+              key: const Key('landing_card_top'),
+              child: ClipPath(
+                clipper: _PolygonClipper(
+                  points: card1Poly.toAbsolute(W, H).map((p) => p - card1Rect.topLeft).toList(),
+                  radius: cardRadius,
+                ),
+                child: ExcludeSemantics(
+                  child: Image.asset(
+                    topAsset,
+                    width: card1Rect.width,
+                    height: card1Rect.height,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => _buildFallbackPanel(),
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          // 4. Picture Card 2 (Bottom)
+          Positioned.fromRect(
+            rect: card2Rect,
+            child: KeyedSubtree(
+              key: const Key('landing_card_bottom'),
+              child: ClipPath(
+                clipper: _PolygonClipper(
+                  points: card2Poly.toAbsolute(W, H).map((p) => p - card2Rect.topLeft).toList(),
+                  radius: cardRadius,
+                ),
+                child: ExcludeSemantics(
+                  child: Image.asset(
+                    bottomAsset,
+                    width: card2Rect.width,
+                    height: card2Rect.height,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => _buildFallbackPanel(),
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          // 5. Text Block (Drawn over pictures where they overlap)
+          Positioned(
+            left: isMirrored ? null : (0.065 * W),
+            right: isMirrored ? (0.065 * W) : null,
+            top: 0.228 * H,
+            child: Column(
+              crossAxisAlignment: isMirrored ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // a) Eyebrow
+                Text(
+                  eyebrow,
+                  style: TextStyle(
+                    fontFamily: VanRozgarTokens.fontFamily,
+                    fontSize: eyebrowFontSize,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: isDevanagari ? 0.0 : 0.55 * eyebrowFontSize,
+                    color: tokens.mutedText,
+                  ),
+                ),
+
+                SizedBox(height: math.max(4.0, (0.266 - 0.228) * H - eyebrowFontSize)),
+
+                // b) Headline with tight line height and auto-fitted font size
+                KeyedSubtree(
+                  key: const Key('landing_headline'),
+                  child: Column(
+                    crossAxisAlignment: isMirrored ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: headlineLines.asMap().entries.map((entry) {
+                      final lineIndex = entry.key;
+                      final lineText = entry.value;
+                      final isHighlighted = lineIndex == highlightIndex;
+
+                      return Text(
+                        lineText,
+                        softWrap: false,
+                        textAlign: isMirrored ? TextAlign.end : TextAlign.start,
+                        style: TextStyle(
+                          fontFamily: VanRozgarTokens.fontFamily,
+                          fontSize: headlineFontSize,
+                          fontWeight: FontWeight.w900,
+                          height: 1.0,
+                          letterSpacing: -0.03 * headlineFontSize,
+                          color: isHighlighted ? tokens.primaryGreen : inkColor,
                         ),
                       );
                     }).toList(),
                   ),
                 ),
-              ),
-            ),
 
-            // Right: Skip Text Button
-            Semantics(
-              button: true,
-              label: strings.landingSkip,
-              child: TextButton(
-                onPressed: _finishLanding,
-                style: TextButton.styleFrom(
-                  foregroundColor: tokens.mutedText,
-                  minimumSize: const Size(48.0, VanRozgarTokens.minTouchTarget),
-                  padding: const EdgeInsets.symmetric(horizontal: VanRozgarTokens.space12),
-                ),
-                child: Text(
-                  strings.landingSkip,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14.0,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+                SizedBox(height: 0.02 * H),
 
-  Widget _buildBottomBar(
-    BuildContext context,
-    AppStrings strings,
-    VanRozgarColorTokens tokens,
-  ) {
-    final isLastSlide = _currentPage == 2;
-    final buttonLabel = isLastSlide ? strings.landingGetStarted : strings.landingNext;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: VanRozgarTokens.space20,
-        vertical: VanRozgarTokens.space12,
-      ),
-      child: SizedBox(
-        height: VanRozgarTokens.minTouchTarget,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Left: 3 Page Indicator Dots
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: List.generate(3, (index) {
-                final isActive = index == _currentPage;
-                return Semantics(
-                  label: strings.landingSlideDotLabel(index + 1, 3),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 250),
-                    curve: Curves.easeInOut,
-                    margin: const EdgeInsets.only(right: 6.0),
-                    width: isActive ? 24.0 : 8.0,
-                    height: 8.0,
-                    decoration: BoxDecoration(
-                      color: isActive ? tokens.primaryGreen : tokens.chipBg,
-                      borderRadius: BorderRadius.circular(4.0),
-                    ),
-                  ),
-                );
-              }),
-            ),
-
-            // Right: Next / Get Started Pill Button
-            ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: VanRozgarTokens.minTouchTarget),
-              child: FilledButton(
-                onPressed: _handleNext,
-                style: FilledButton.styleFrom(
-                  backgroundColor: tokens.primaryGreen,
-                  foregroundColor: tokens.onPrimaryGreen,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: VanRozgarTokens.borderPill,
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: VanRozgarTokens.space20,
-                    vertical: 12.0,
-                  ),
-                  minimumSize: const Size(0, VanRozgarTokens.minTouchTarget),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      buttonLabel,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 15.0,
+                // c) Subtitle (max width 0.405 * W so it never touches Card 2)
+                KeyedSubtree(
+                  key: const Key('landing_subtitle'),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 0.405 * W),
+                    child: Text(
+                      subtitle,
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: isMirrored ? TextAlign.end : TextAlign.start,
+                      style: TextStyle(
+                        fontFamily: VanRozgarTokens.fontFamily,
+                        fontSize: 0.039 * d,
+                        height: 1.38,
+                        color: tokens.mutedText,
                       ),
                     ),
-                    const SizedBox(width: VanRozgarTokens.space8),
-                    const Icon(Icons.arrow_forward_rounded, size: 18.0),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// A single slide inside the Landing Page PageView.
-class _LandingSlide extends StatelessWidget {
-  final int slideIndex;
-  final bool isMirrored;
-  final String lead;
-  final String highlight;
-  final String tail;
-  final String subtitle;
-  final String pictureLabel;
-  final String topAsset;
-  final String bottomAsset;
-  final VanRozgarColorTokens tokens;
-
-  const _LandingSlide({
-    required this.slideIndex,
-    required this.isMirrored,
-    required this.lead,
-    required this.highlight,
-    required this.tail,
-    required this.subtitle,
-    required this.pictureLabel,
-    required this.topAsset,
-    required this.bottomAsset,
-    required this.tokens,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final availableWidth = constraints.maxWidth;
-        final availableHeight = constraints.maxHeight;
-
-        final pictureWidth = availableWidth * 0.46;
-        final textWidth = availableWidth * 0.50;
-        final gapWidth = availableWidth * 0.04;
-
-        final pictureWidget = SizedBox(
-          width: pictureWidth,
-          height: availableHeight,
-          child: _buildPictureSide(context, pictureWidth, availableHeight),
-        );
-
-        final textWidget = SizedBox(
-          width: textWidth,
-          height: availableHeight,
-          child: _buildTextSide(context, textWidth, availableHeight),
-        );
-
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: VanRozgarTokens.space16),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: isMirrored
-                ? [textWidget, SizedBox(width: gapWidth), pictureWidget]
-                : [pictureWidget, SizedBox(width: gapWidth), textWidget],
           ),
-        );
-      },
-    );
-  }
 
-  Widget _buildTextSide(
-    BuildContext context,
-    double width,
-    double height,
-  ) {
-    final theme = Theme.of(context);
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    final headlineFontSize = (screenWidth * 0.085).clamp(22.0, 34.0);
-
-    return Center(
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(vertical: VanRozgarTokens.space8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Headline with highlight phrase
-            Text.rich(
-              TextSpan(
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  fontSize: headlineFontSize,
-                  fontWeight: FontWeight.w800,
-                  color: tokens.heading,
-                  height: 1.2,
-                  letterSpacing: -0.2,
-                ),
-                children: [
-                  TextSpan(text: lead),
-                  TextSpan(
-                    text: highlight,
-                    style: TextStyle(
-                      color: tokens.primaryGreen,
-                      fontWeight: FontWeight.w800,
-                    ),
+          // 6. Handwritten Note with Underline Stroke
+          Positioned(
+            left: isMirrored ? null : (0.098 * W),
+            right: isMirrored ? (0.098 * W) : null,
+            top: 0.723 * H,
+            width: 0.196 * W,
+            child: KeyedSubtree(
+              key: const Key('landing_note'),
+              child: Transform.rotate(
+                angle: (isMirrored ? 14.0 : -14.0) * math.pi / 180.0,
+                child: Text(
+                  noteLines.join('\n'),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: isDevanagari ? VanRozgarTokens.fontFamily : 'cursive',
+                    fontStyle: FontStyle.italic,
+                    fontSize: 0.06 * d,
+                    height: 1.15,
+                    color: tokens.mutedText,
                   ),
-                  if (tail.isNotEmpty) TextSpan(text: tail),
-                ],
-              ),
-              textAlign: TextAlign.start,
-            ),
-
-            const SizedBox(height: VanRozgarTokens.space12),
-
-            // Subtitle
-            Text(
-              subtitle,
-              textAlign: TextAlign.start,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: tokens.bodyText,
-                fontSize: 14.0,
-                height: 1.45,
+                ),
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPictureSide(
-    BuildContext context,
-    double availableWidth,
-    double availableHeight,
-  ) {
-    final double initialCardWidth = (availableWidth - 8.0) / 1.14;
-    final double cardHeight = math.min(
-      initialCardWidth * 1.5,
-      math.min(availableHeight * 0.56, availableHeight * 0.50),
-    );
-    final double cardWidth = cardHeight / 1.5;
-
-    final double totalStackHeight = cardHeight + (cardHeight * 0.88);
-    final double topOffset = math.max(0.0, (availableHeight - totalStackHeight) / 2.0);
-
-    // Shifts and rotations
-    // Mirror slide 2: first card +3 deg, second -3 deg; shift toward text side (left)
-    final double card1Angle = isMirrored ? (3.0 * math.pi / 180.0) : (-3.0 * math.pi / 180.0);
-    final double card2Angle = isMirrored ? (-3.0 * math.pi / 180.0) : (3.0 * math.pi / 180.0);
-
-    final double card1Left = isMirrored ? (cardWidth * 0.14) : 0.0;
-    final double card2Left = isMirrored ? 0.0 : (cardWidth * 0.14);
-
-    return Semantics(
-      label: pictureLabel,
-      child: Center(
-        child: SizedBox(
-          width: cardWidth * 1.15 + 8.0,
-          height: availableHeight,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              // Pale-green rounded background shape behind cards
-              Positioned(
-                top: topOffset,
-                child: Container(
-                  width: cardWidth * 1.16,
-                  height: totalStackHeight,
-                  decoration: BoxDecoration(
-                    color: tokens.chipBg.withValues(alpha: 0.7),
-                    borderRadius: BorderRadius.circular(28.0),
-                  ),
-                ),
-              ),
-
-              // Card 1 (Top)
-              Positioned(
-                top: topOffset,
-                left: card1Left,
-                child: Transform.rotate(
-                  angle: card1Angle,
-                  child: _PictureCard(
-                    assetPath: topAsset,
-                    width: cardWidth,
-                    height: cardHeight,
-                    tokens: tokens,
-                  ),
-                ),
-              ),
-
-              // Card 2 (Bottom - overlaps Card 1 by ~12% height and shifts 14% toward text side)
-              Positioned(
-                top: topOffset + (cardHeight * 0.88),
-                left: card2Left,
-                child: Transform.rotate(
-                  angle: card2Angle,
-                  child: _PictureCard(
-                    assetPath: bottomAsset,
-                    width: cardWidth,
-                    height: cardHeight,
-                    tokens: tokens,
-                  ),
-                ),
-              ),
-            ],
           ),
-        ),
-      ),
-    );
-  }
-}
 
-/// Single decorated picture card with aspect ratio 2:3 and graceful fallback panel.
-class _PictureCard extends StatelessWidget {
-  final String assetPath;
-  final double width;
-  final double height;
-  final VanRozgarColorTokens tokens;
-
-  const _PictureCard({
-    required this.assetPath,
-    required this.width,
-    required this.height,
-    required this.tokens,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final dpr = MediaQuery.devicePixelRatioOf(context);
-    final cacheWidth = (width * dpr).round();
-
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        color: tokens.card,
-        borderRadius: BorderRadius.circular(24.0),
-        border: Border.all(color: tokens.borders, width: 1.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.12),
-            blurRadius: 12.0,
-            offset: const Offset(0, 4),
+          // Underline stroke decoration
+          CustomPaint(
+            painter: _UnderlinePainter(
+              mirrored: isMirrored,
+              W: W,
+              H: H,
+              color: tokens.mutedText,
+            ),
           ),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(23.0),
-        child: ExcludeSemantics(
-          child: Image.asset(
-            assetPath,
-            fit: BoxFit.cover,
-            cacheWidth: cacheWidth,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                color: VanRozgarTokens.picturePanel,
-                alignment: Alignment.center,
-                child: Icon(
-                  Icons.eco_outlined,
-                  size: 28.0,
-                  color: VanRozgarTokens.lightHeadingGreen.withValues(alpha: 0.6),
-                ),
-              );
-            },
-          ),
-        ),
+    );
+  }
+
+  Widget _buildFallbackPanel() {
+    return Container(
+      color: VanRozgarTokens.picturePanel,
+      alignment: Alignment.center,
+      child: Icon(
+        Icons.eco_outlined,
+        size: 28.0,
+        color: VanRozgarTokens.lightHeadingGreen.withValues(alpha: 0.6),
       ),
     );
+  }
+}
+
+/// CustomClipper that clips child to a rounded polygon using LandingGeometry.
+class _PolygonClipper extends CustomClipper<Path> {
+  final List<Offset> points;
+  final double radius;
+
+  _PolygonClipper({required this.points, required this.radius});
+
+  @override
+  Path getClip(Size size) {
+    return LandingGeometry.roundPolygon(points, radius);
+  }
+
+  @override
+  bool shouldReclip(covariant _PolygonClipper oldClipper) {
+    return oldClipper.radius != radius || oldClipper.points != points;
+  }
+}
+
+/// CustomPainter for the single handwritten underline stroke.
+class _UnderlinePainter extends CustomPainter {
+  final bool mirrored;
+  final double W;
+  final double H;
+  final Color color;
+
+  _UnderlinePainter({
+    required this.mirrored,
+    required this.W,
+    required this.H,
+    required this.color,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 0.008 * W
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke;
+
+    final Offset p1;
+    final Offset p2;
+
+    if (mirrored) {
+      p1 = Offset((1.0 - 0.216) * W, 0.832 * H);
+      p2 = Offset((1.0 - 0.290) * W, 0.814 * H);
+    } else {
+      p1 = Offset(0.216 * W, 0.832 * H);
+      p2 = Offset(0.290 * W, 0.814 * H);
+    }
+
+    canvas.drawLine(p1, p2, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _UnderlinePainter oldDelegate) {
+    return oldDelegate.mirrored != mirrored ||
+        oldDelegate.W != W ||
+        oldDelegate.H != H ||
+        oldDelegate.color != color;
   }
 }
