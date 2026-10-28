@@ -25,11 +25,13 @@ Widget _buildTestApp({
       theme: VanRozgarTheme.lightTheme,
       darkTheme: VanRozgarTheme.darkTheme,
       themeMode: themeMode,
-      home: MediaQuery(
-        data: MediaQueryData(
-          textScaler: TextScaler.linear(textScale),
+      home: Builder(
+        builder: (context) => MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            textScaler: TextScaler.linear(textScale),
+          ),
+          child: Material(child: child),
         ),
-        child: Material(child: child),
       ),
     ),
   );

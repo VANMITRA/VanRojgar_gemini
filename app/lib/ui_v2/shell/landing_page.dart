@@ -218,24 +218,37 @@ class _LandingPageState extends ConsumerState<LandingPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Left: Leaf icon + App name
-          Icon(
-            Icons.eco,
-            size: 0.07 * d,
-            color: tokens.heading,
-          ),
-          const SizedBox(width: 4.0),
-          Text(
-            strings.appNameNative,
-            style: TextStyle(
-              fontFamily: VanRozgarTokens.fontFamily,
-              fontSize: 0.064 * d,
-              fontWeight: FontWeight.w800,
-              letterSpacing: -0.02 * (0.064 * d),
-              color: inkColor,
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.eco,
+                    size: 0.07 * d,
+                    color: tokens.heading,
+                  ),
+                  const SizedBox(width: 4.0),
+                  Text(
+                    strings.appNameNative,
+                    maxLines: 1,
+                    softWrap: false,
+                    style: TextStyle(
+                      fontFamily: VanRozgarTokens.fontFamily,
+                      fontSize: 0.064 * d,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.02 * (0.064 * d),
+                      color: inkColor,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
 
-          const Spacer(),
+          const SizedBox(width: 8.0),
 
           // Middle: Three tiny language chips (EN, हिं, मरा)
           Row(
@@ -285,7 +298,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
             }).toList(),
           ),
 
-          const Spacer(),
+          const SizedBox(width: 4.0),
 
           // Right: Skip button
           Semantics(
