@@ -481,6 +481,12 @@ void main() {
 
     testWidgets('ADD turns into stepper, + and - increment and decrement, - below minimum removes item, and Cart badge updates',
         (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(720, 3600);
+      tester.view.devicePixelRatio = 2.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      uiV2LandingSeen.value = true;
+
       await tester.pumpWidget(_buildTestRouterApp());
       await tester.pumpAndSettle();
 
@@ -557,6 +563,11 @@ void main() {
     });
 
     testWidgets('Hindi and Marathi contain no English text on home page', (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(720, 4800);
+      tester.view.devicePixelRatio = 2.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
       await tester.pumpWidget(
         _buildTestApp(
           child: const HomeDemoPage(),

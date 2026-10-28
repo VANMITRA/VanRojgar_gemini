@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../l10n/app_strings.dart';
@@ -78,23 +79,25 @@ class _HomeTopDealsSectionState extends ConsumerState<HomeTopDealsSection> {
           ),
           SizedBox(height: 12.0 * s),
           RepaintBoundary(
-            child: SizedBox(
-              height: 310.0 * s,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: 16.0 * s),
-                itemCount: widget.topDeals.length,
-                separatorBuilder: (context, index) => SizedBox(width: 12.0 * s),
-                itemBuilder: (context, index) {
-                  final product = widget.topDeals[index];
-                  return SizedBox(
-                    width: cardWidth,
-                    child: ProductCard(
-                      product: product,
-                      cardType: ProductCardType.topDeal,
-                    ),
-                  );
-                },
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.symmetric(horizontal: 16.0 * s),
+              child: IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (int i = 0; i < widget.topDeals.length; i++) ...[
+                      if (i > 0) SizedBox(width: 12.0 * s),
+                      SizedBox(
+                        width: cardWidth,
+                        child: ProductCard(
+                          product: widget.topDeals[i],
+                          cardType: ProductCardType.topDeal,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -296,22 +299,24 @@ class _HomeTopDealsSectionState extends ConsumerState<HomeTopDealsSection> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 RepaintBoundary(
-                  child: SizedBox(
-                    height: 310.0 * s,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: activeTab.products.length,
-                      separatorBuilder: (context, index) => SizedBox(width: 12.0 * s),
-                      itemBuilder: (context, index) {
-                        final product = activeTab.products[index];
-                        return SizedBox(
-                          width: cardWidth,
-                          child: ProductCard(
-                            product: product,
-                            cardType: ProductCardType.topDeal,
-                          ),
-                        );
-                      },
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          for (int i = 0; i < activeTab.products.length; i++) ...[
+                            if (i > 0) SizedBox(width: 12.0 * s),
+                            SizedBox(
+                              width: cardWidth,
+                              child: ProductCard(
+                                product: activeTab.products[i],
+                                cardType: ProductCardType.topDeal,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -364,12 +369,16 @@ class _HomeTopDealsSectionState extends ConsumerState<HomeTopDealsSection> {
                           ),
                         ),
                         SizedBox(width: 8.0 * s),
-                        Text(
-                          strings.seeAllProducts,
-                          style: TextStyle(
-                            fontSize: 14.0 * s,
-                            fontWeight: FontWeight.w700,
-                            color: tokens.primaryGreen,
+                        Flexible(
+                          child: Text(
+                            strings.seeAllProducts,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 14.0 * s,
+                              fontWeight: FontWeight.w700,
+                              color: tokens.primaryGreen,
+                            ),
                           ),
                         ),
                         SizedBox(width: 4.0 * s),

@@ -80,7 +80,7 @@ class _HomeHeroBannerState extends State<HomeHeroBanner> {
 
     // Banner 1 pictures
     const banner1Pictures = [
-      'assets/catalog/bamboo_pole.jpg',
+      'assets/catalog/bamboo.jpg',
       'assets/catalog/fruit_mango.jpg',
       'assets/catalog/fruit_awla.jpg',
     ];
@@ -95,11 +95,70 @@ class _HomeHeroBannerState extends State<HomeHeroBanner> {
         ? widget.topDeals.first.bestDiscountPercent
         : 25;
 
+    final textScaler = MediaQuery.textScalerOf(context);
+    final defaultStyle = DefaultTextStyle.of(context).style;
+    final textColumnWidth = (screenWidth - 32.0 * s) * 0.58 - 20.0 * s;
+
+    double measureNeededHeight({
+      required String eyebrow,
+      required String title,
+      required String subtitle,
+    }) {
+      double measure(String text, TextStyle style, int maxLines) {
+        final tp = TextPainter(
+          text: TextSpan(text: text, style: defaultStyle.merge(style)),
+          maxLines: maxLines,
+          textDirection: TextDirection.ltr,
+          textScaler: textScaler,
+        )..layout(maxWidth: math.max(0.0, textColumnWidth));
+        return tp.height;
+      }
+
+      final eyebrowHeight = measure(
+        eyebrow,
+        TextStyle(fontSize: 10.5 * s, fontWeight: FontWeight.w700, letterSpacing: 0.8),
+        1,
+      ) + (5.0 * s);
+
+      final headlineHeight = measure(
+        title,
+        TextStyle(fontSize: 18.0 * s, fontWeight: FontWeight.w800, height: 1.1),
+        3,
+      );
+
+      final subtitleHeight = measure(
+        subtitle,
+        TextStyle(fontSize: 12.0 * s),
+        2,
+      );
+
+      return (24.0 * s) +
+          eyebrowHeight +
+          headlineHeight +
+          subtitleHeight +
+          (36.0 * s) +
+          (3 * 6.0 * s);
+    }
+
+    final banner1NeededHeight = measureNeededHeight(
+      eyebrow: strings.heroEyebrow1,
+      title: strings.heroTitle1,
+      subtitle: strings.heroSubtitle1,
+    );
+
+    final banner2NeededHeight = measureNeededHeight(
+      eyebrow: strings.heroEyebrow2,
+      title: strings.heroTitle2(bestDiscount),
+      subtitle: strings.heroSubtitle2,
+    );
+
+    final bannerHeight = math.max(150.0 * s, math.max(banner1NeededHeight, banner2NeededHeight));
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
-          height: 150.0 * s,
+          height: bannerHeight,
           child: PageView(
             controller: _pageController,
             onPageChanged: (page) {
@@ -198,6 +257,8 @@ class _HomeHeroBannerState extends State<HomeHeroBanner> {
                         ),
                         child: Text(
                           eyebrow,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 10.5 * s,
                             fontWeight: FontWeight.w700,
@@ -242,12 +303,16 @@ class _HomeHeroBannerState extends State<HomeHeroBanner> {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(
-                                ctaText,
-                                style: TextStyle(
-                                  fontSize: 13.0 * s,
-                                  fontWeight: FontWeight.w700,
-                                  color: tokens.primaryGreen,
+                              Flexible(
+                                child: Text(
+                                  ctaText,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 13.0 * s,
+                                    fontWeight: FontWeight.w700,
+                                    color: tokens.primaryGreen,
+                                  ),
                                 ),
                               ),
                               SizedBox(width: 8.0 * s),

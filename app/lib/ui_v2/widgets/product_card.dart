@@ -236,47 +236,62 @@ class ProductCard extends ConsumerWidget {
                         Container(
                           width: 96.0 * s,
                           height: 34.0 * s,
+                          clipBehavior: Clip.antiAlias,
                           decoration: BoxDecoration(
                             color: tokens.primaryGreen,
                             borderRadius: BorderRadius.circular(10.0 * s),
                           ),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              // Minus / Remove
-                              IconButton(
-                                iconSize: 16.0 * s,
-                                padding: EdgeInsets.zero,
-                                constraints: BoxConstraints(
-                                  minWidth: 32.0 * s,
-                                  minHeight: 34.0 * s,
-                                ),
-                                icon: const Icon(Icons.remove, color: Colors.white),
-                                onPressed: () {
-                                  ref.read(cartQuantitiesProvider.notifier).decrement(product.productCode, minOrder);
-                                },
-                              ),
-                              // Quantity display
-                              Text(
-                                '$currentQty',
-                                style: TextStyle(
-                                  fontSize: 14.0 * s,
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.white,
+                              Semantics(
+                                button: true,
+                                label: '-',
+                                child: InkWell(
+                                  onTap: () {
+                                    ref.read(cartQuantitiesProvider.notifier).decrement(product.productCode, minOrder);
+                                  },
+                                  child: SizedBox(
+                                    width: 30.0 * s,
+                                    height: double.infinity,
+                                    child: Icon(
+                                      Icons.remove,
+                                      size: 16.0 * s,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ),
                               ),
-                              // Plus
-                              IconButton(
-                                iconSize: 16.0 * s,
-                                padding: EdgeInsets.zero,
-                                constraints: BoxConstraints(
-                                  minWidth: 32.0 * s,
-                                  minHeight: 34.0 * s,
+                              Expanded(
+                                child: Center(
+                                  child: Text(
+                                    '$currentQty',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 14.0 * s,
+                                      fontWeight: FontWeight.w800,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ),
-                                icon: const Icon(Icons.add, color: Colors.white),
-                                onPressed: () {
-                                  ref.read(cartQuantitiesProvider.notifier).increment(product.productCode);
-                                },
+                              ),
+                              Semantics(
+                                button: true,
+                                label: '+',
+                                child: InkWell(
+                                  onTap: () {
+                                    ref.read(cartQuantitiesProvider.notifier).increment(product.productCode);
+                                  },
+                                  child: SizedBox(
+                                    width: 30.0 * s,
+                                    height: double.infinity,
+                                    child: Icon(
+                                      Icons.add,
+                                      size: 16.0 * s,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ],
                           ),

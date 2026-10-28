@@ -374,27 +374,38 @@ class _HomeDemoPageState extends ConsumerState<HomeDemoPage> {
               final width = constraints.crossAxisExtent;
               final crossAxisCount = width >= 960 ? 4 : (width >= 600 ? 3 : 2);
               final double spacing = 12.0 * s;
-              final double totalSpacing = spacing * (crossAxisCount - 1);
-              final double colWidth = (width - totalSpacing) / crossAxisCount;
-              final double estimatedCardHeight = colWidth + (145.0 * s);
-              final double childAspectRatio = (colWidth / estimatedCardHeight).clamp(0.48, 0.85);
+              final int rowCount = (products.length / crossAxisCount).ceil();
 
-              return SliverGrid(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: crossAxisCount,
-                  crossAxisSpacing: spacing,
-                  mainAxisSpacing: spacing,
-                  childAspectRatio: childAspectRatio,
-                ),
+              return SliverList(
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final product = products[index];
-                    return ProductCard(
-                      product: product,
-                      cardType: ProductCardType.grid,
+                  (context, rowIndex) {
+                    final startIndex = rowIndex * crossAxisCount;
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: spacing),
+                      child: IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            for (int col = 0; col < crossAxisCount; col++) ...[
+                              if (col > 0) SizedBox(width: spacing),
+                              if (startIndex + col < products.length)
+                                Expanded(
+                                  child: ProductCard(
+                                    product: products[startIndex + col],
+                                    cardType: ProductCardType.grid,
+                                  ),
+                                )
+                              else
+                                const Expanded(
+                                  child: SizedBox.shrink(),
+                                ),
+                            ],
+                          ],
+                        ),
+                      ),
                     );
                   },
-                  childCount: products.length,
+                  childCount: rowCount,
                 ),
               );
             },
@@ -423,40 +434,48 @@ class _HomeDemoPageState extends ConsumerState<HomeDemoPage> {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0 * s),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 20.0 * s,
-                  fontWeight: FontWeight.w800,
-                  color: tokens.heading,
+              Expanded(
+                child: Text(
+                  title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 20.0 * s,
+                    fontWeight: FontWeight.w800,
+                    color: tokens.heading,
+                  ),
                 ),
               ),
-              if (trailingAction != null) trailingAction,
+              if (trailingAction != null) ...[
+                SizedBox(width: 8.0 * s),
+                trailingAction,
+              ],
             ],
           ),
         ),
         SizedBox(height: 12.0 * s),
         RepaintBoundary(
-          child: SizedBox(
-            height: 310.0 * s,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.symmetric(horizontal: 16.0 * s),
-              itemCount: items.length,
-              separatorBuilder: (context, index) => SizedBox(width: 12.0 * s),
-              itemBuilder: (context, index) {
-                final item = items[index];
-                return SizedBox(
-                  width: cardWidth,
-                  child: ProductCard(
-                    product: item.product,
-                    listing: item.listing,
-                    cardType: cardType,
-                  ),
-                );
-              },
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.symmetric(horizontal: 16.0 * s),
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (int i = 0; i < items.length; i++) ...[
+                    if (i > 0) SizedBox(width: 12.0 * s),
+                    SizedBox(
+                      width: cardWidth,
+                      child: ProductCard(
+                        product: items[i].product,
+                        listing: items[i].listing,
+                        cardType: cardType,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
             ),
           ),
         ),
